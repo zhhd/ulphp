@@ -10,11 +10,13 @@
 namespace ulphp;
 
 
-use ulphp\lib\db\mysql\Query;
+use ulphp\lib\db\mysql\Query as qMysql;
+use ulphp\lib\db\redis\Query as qRedis;
 
 class DBManage
 {
     private static $mysql = [];
+    private static $redis = [];
 
     /**
      * 获取mysql连接
@@ -31,9 +33,28 @@ class DBManage
         $charset  = $config['charset'];
 
         if (!isset(self::$mysql[$host . $db_name])) {
-            self::$mysql[$host . $db_name] = new Query($host, $port, $user, $password, $db_name, $charset);
+            self::$mysql[$host . $db_name] = new qMysql($host, $port, $user, $password, $db_name, $charset);
         }
 
         return self::$mysql[$host . $db_name];
+    }
+
+    /**
+     * 获取redis连接
+     * @param $config
+     * @return mixed
+     */
+    public static function getRedis($config)
+    {
+        $host     = $config['host'];
+        $password = $config['password'];
+        $port     = $config['port'];
+        $timeout  = $config['timeout'];
+
+        if (!isset(self::$redis[$host . $host])) {
+            self::$redis[$host . $host] = new qRedis($host, $password, $port, $timeout);
+        }
+
+        return self::$redis[$host . $host];
     }
 }

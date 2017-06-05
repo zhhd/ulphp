@@ -12,8 +12,24 @@ use \ulphp\core\Controller as CoreController;
 
 class Controller
 {
+    private $assign  = [];
+    private $_static = '';
+    private $_css    = '';
+    private $_js     = '';
+
     /**
-     * 模板渲染
+     * 渲染变量
+     * @param string $key
+     * @param mixed  $value
+     * @return array
+     */
+    protected function assign($key = NULL, $value = NULL)
+    {
+        $this->assign[] = ['key' => $key, 'value' => $value];
+    }
+
+    /**
+     * 视图渲染
      * @throws \Exception
      */
     protected function fetch()
@@ -25,12 +41,68 @@ class Controller
         $view_php  = $view_new . '.php';
         $view_html = $view_new . '.html';
 
+        define('__CSS__', $this->_css());
+        define('__JS__', $this->_js());
+        define('__STATIC__', $this->_static());
+
+        /**
+         * 变量渲染
+         */
+        foreach ($this->assign as $value) {
+            $key   = $value['key'];
+            $value = $value['value'];
+            $$key  = $value;
+        }
+
+        /**
+         * 引入视图
+         */
         if (file_exists($view_php)) {
             include $view_php;
         } else if (file_exists($view_html)) {
             include $view_html;
         } else {
-            throw new \Exception("模板不存在：" . $view);
+            throw new \Exception("视图不存在：" . $view);
         }
+    }
+
+    /**
+     * 获取static 路径
+     * @return string
+     */
+    private function _static()
+    {
+        if (empty($this->_static)) {
+            $phpSelf       = dirname($_SERVER['PHP_SELF']);
+            $this->_static = $phpSelf . '/' . 'static';
+        }
+
+        return $this->_static;
+    }
+
+    /**
+     * 获取css 路径
+     * @return string
+     */
+    private function _css()
+    {
+        if (empty($this->_css)) {
+            $this->_css = $this->_static() . '/css';
+        }
+
+        return $this->_css;
+    }
+
+    /**
+     * 获取js路径
+     * @return string
+     */
+    private function _js()
+    {
+        if (empty($this->_js)) {
+            $this->_js = $this->_static() . '/js';
+        }
+
+        return $this->_js;
     }
 }

@@ -265,6 +265,30 @@ function url($controller = NULL, $params = [])
 }
 
 /**
+ * 获取mysql连接
+ * @param string $file 配置文件名，省略后缀
+ * @return \ulphp\lib\db\mysql\Query
+ */
+function mysql_db($file = 'mysql')
+{
+    $config = config($file);
+
+    return \ulphp\DBManage::getMysql($config);
+}
+
+/**
+ * 获取redis连接
+ * @param string $file 配置文件名，省略后缀
+ * @return mixed
+ */
+function redis_db($file = 'redis')
+{
+    $config = config($file);
+
+    return \ulphp\DBManage::getRedis($config);
+}
+
+/**
  * 写日志
  * @param $log
  */

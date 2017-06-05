@@ -403,9 +403,7 @@ class Model
      */
     public function getDb()
     {
-        $config = config($this->config);
-
-        return DBManage::getMysql($config);
+        return mysql_db($this->config);
     }
 
     /**
