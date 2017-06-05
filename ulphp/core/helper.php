@@ -279,7 +279,7 @@ function mysql_db($file = 'mysql')
 /**
  * 获取redis连接
  * @param string $file 配置文件名，省略后缀
- * @return mixed
+ * @return \ulphp\lib\db\redis\Query
  */
 function redis_db($file = 'redis')
 {

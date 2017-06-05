@@ -12,6 +12,7 @@ namespace ulphp;
 
 use ulphp\lib\db\mysql\Query as qMysql;
 use ulphp\lib\db\redis\Query as qRedis;
+use ulphp\lib\db\redis\Query;
 
 class DBManage
 {
@@ -21,7 +22,7 @@ class DBManage
     /**
      * 获取mysql连接
      * @param $config
-     * @return Query
+     * @return qMysql
      */
     public static function getMysql($config)
     {
@@ -42,7 +43,7 @@ class DBManage
     /**
      * 获取redis连接
      * @param $config
-     * @return mixed
+     * @return qRedis
      */
     public static function getRedis($config)
     {

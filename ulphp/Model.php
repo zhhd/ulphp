@@ -126,7 +126,7 @@ class Model
     private function filedSplit($array)
     {
         $filed = '';
-        $keys  = ['.', ' count', ' sum', ' as ', ' avg', ' min', ' max', ' '];
+        $keys  = ['.', ' count', ' sum', ' as ', ' avg', ' min', ' max', ' ','`'];
         foreach ($array as $value) {
             if ($filed != '') {
                 $filed .= ',';

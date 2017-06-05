@@ -29,9 +29,14 @@ class Controller
         self::$controller = $controller;
         self::$method     = $method;
 
-        $class = '\controller\\' . $controller;
-        $obj   = new $class();
-        call_user_func([$obj, $method]);
+        $class  = '\controller\\' . $controller;
+        $obj    = new $class();
+        $result = call_user_func([$obj, $method]);
+        if (is_int($result) || is_string($result)) {
+            echo $result;
+        } else {
+            echo json($result);
+        }
     }
 
     public function ucFormat($controller)
