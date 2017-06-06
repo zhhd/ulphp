@@ -88,8 +88,10 @@ if (!function_exists('session')) {
             return $_SESSION;
         } else if ($value == NULL && isset($_SESSION[$key])) {
             return $_SESSION[$key];
-        } else {
+        } else if ($key != NULL && $value != NULL) {
             $_SESSION[$key] = $value;
+        } else {
+            return NULL;
         }
     }
 }
