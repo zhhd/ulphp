@@ -34,7 +34,7 @@ class Controller
         $result = call_user_func([$obj, $method]);
         if (is_int($result) || is_string($result)) {
             echo $result;
-        } else {
+        } else if (!is_null($result)) {
             echo json($result);
         }
     }

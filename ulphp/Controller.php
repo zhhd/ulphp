@@ -30,12 +30,16 @@ class Controller
 
     /**
      * 视图渲染
+     * @param null $view 视图
      * @throws \Exception
      */
-    protected function fetch()
+    protected function fetch($view = NULL)
     {
-        $view      = strtolower('view' . '/' . CoreController::$controller . '/' . CoreController::$method);
-        $view_new  = APP_PATH . $view;
+        if (empty($view)) {
+            $view = strtolower(CoreController::$controller . '/' . CoreController::$method);
+        }
+
+        $view_new  = APP_PATH . 'view' . '/' . $view;
         $view_new  = str_replace('/', DIRECTORY_SEPARATOR, $view_new);
         $view_new  = str_replace('\\', DIRECTORY_SEPARATOR, $view_new);
         $view_php  = $view_new . '.php';
