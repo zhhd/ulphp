@@ -303,6 +303,13 @@ function redis_db($file = 'redis')
  */
 function write_log($log)
 {
+    $in_file = ['Config.php', 'Controller.php', 'Log.php', 'Logic.php', 'Model.php', 'Static.php', 'Ulphp.php', 'View.php'];
+    foreach ($in_file as $row) {
+        if (strpos($log, $row) !== FALSE) {
+            return;
+        }
+    }
+
     $file = APP_PATH . 'log/' . now('Y-m-d') . '.txt';
     $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
     $file = str_replace('\\', DIRECTORY_SEPARATOR, $file);

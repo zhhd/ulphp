@@ -49,6 +49,4 @@ class Controller
 
         return $controller;
     }
-
-
 }
