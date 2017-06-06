@@ -306,6 +306,9 @@ function write_log($log)
     $in_file = ['Config.php', 'Controller.php', 'Log.php', 'Logic.php', 'Model.php', 'Static.php', 'Ulphp.php', 'View.php'];
     foreach ($in_file as $row) {
         if (strpos($log, $row) !== FALSE) {
+            header("HTTP/1.1 404 Not Found");
+            header("Status: 404 Not Found");
+
             return;
         }
     }
