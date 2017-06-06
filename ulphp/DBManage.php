@@ -12,7 +12,6 @@ namespace ulphp;
 
 use ulphp\lib\db\mysql\Query as qMysql;
 use ulphp\lib\db\redis\Query as qRedis;
-use ulphp\lib\db\redis\Query;
 
 class DBManage
 {

@@ -24,7 +24,9 @@ class Exception
      */
     public function appException($e)
     {
-        $log = '<b>Exception error:</b> ' . $e->getMessage();
+        $log = '<b>Exception error:</b> ' . $e->getMessage() . '<br>';
+        $log .= '. file:' . $e->getFile() . '<br>';
+        $log .= '. line:' . $e->getLine();
         write_log($log);
     }
 
