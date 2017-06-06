@@ -250,7 +250,7 @@ class Model
          */
         if (empty(trim($where))) {
             $where = $whereOr;
-        } else {
+        } else if (!empty(trim($whereOr))) {
             $where = $where . ' or ' . $whereOr;
         }
 
@@ -520,6 +520,17 @@ class Model
         return $this;
     }
 
+    public function clear()
+    {
+        $this->join       = [];
+        $this->left_join  = [];
+        $this->right_join = [];
+        $this->where      = [];
+        $this->where_or   = [];
+        $this->group      = [];
+        $this->order      = [];
+        $this->having     = [];
+    }
 
     /**
      * 获取单条数据
@@ -580,6 +591,7 @@ class Model
          */
         $query          = "select $filed from $this->table $join $leftJoin $rightJoin $where $group $having $order limit 1";
         $this->last_sql = $query;
+        $this->clear();
 
         return $this->getDb()->row($query, $param);
     }
@@ -643,6 +655,7 @@ class Model
          */
         $query          = "select $filed from $this->table $join $leftJoin $rightJoin $where $group $having $order";
         $this->last_sql = $query;
+        $this->clear();
 
         return $this->getDb()->select($query, $param);
     }
@@ -676,6 +689,7 @@ class Model
 
         $query          = "update $this->table set $set $whereStr";
         $this->last_sql = $query;
+        $this->clear();
 
         return $this->getDb()->update($query, $param);
     }
@@ -700,6 +714,7 @@ class Model
 
         $query          = "insert into $this->table ($filed) values ($values)";
         $this->last_sql = $query;
+        $this->clear();
 
         return $this->getDb()->insert($query, $param);
     }
@@ -738,6 +753,7 @@ class Model
          */
         $query          = "select count($filed) as count from $this->table $where $having";
         $this->last_sql = $query;
+        $this->clear();
 
         return $this->getDb()->row($query, $param)['count'];
     }
@@ -776,6 +792,7 @@ class Model
          */
         $query          = "select sum($filed) as sum from $this->table $where $having";
         $this->last_sql = $query;
+        $this->clear();
 
         $sum = $this->getDb()->row($query, $param)['sum'];
 
@@ -816,6 +833,7 @@ class Model
          */
         $query          = "select avg($filed) as avg from $this->table $where $having";
         $this->last_sql = $query;
+        $this->clear();
 
         $avg = $this->getDb()->row($query, $param)['avg'];
 
@@ -856,6 +874,7 @@ class Model
          */
         $query          = "select min($filed) as min from $this->table $where $having";
         $this->last_sql = $query;
+        $this->clear();
 
         $min = $this->getDb()->row($query, $param)['min'];
 
@@ -896,7 +915,8 @@ class Model
          */
         $query          = "select max($filed) as max from $this->table $where $having";
         $this->last_sql = $query;
-
+        $this->clear();
+        
         $max = $this->getDb()->row($query, $param)['max'];
 
         return empty($max) ? 0 : $max;
