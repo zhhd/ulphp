@@ -103,9 +103,14 @@ function config($file)
 {
     $config_var = 'CONFIG_VAR_' . $file;
     if (!isset($GLOBALS[$config_var])) {
-        $file = APP_PATH . '/config/' . $file . '.php';
+        $file = APP_PATH . 'config/' . $file . '.php';
+
         global $$config_var;
-        $$config_var = include $file;
+        if (is_file($file)) {
+            $$config_var = include $file;
+        } else {
+            $$config_var = [];
+        }
     }
 
     return $GLOBALS[$config_var];
