@@ -91,15 +91,20 @@ if (!function_exists('session')) {
 }
 
 /**
- *
+ * 读取配置文件
  * @param $file
  * @return mixed
  */
 function config($file)
 {
-    $file = APP_PATH . '/config/' . $file . '.php';
+    $config_var = 'CONFIG_VAR_' . $file;
+    if (!isset($GLOBALS[$config_var])) {
+        $file = APP_PATH . '/config/' . $file . '.php';
+        global $$config_var;
+        $$config_var = include $file;
+    }
 
-    return include $file;
+    return $GLOBALS[$config_var];
 }
 
 /**
