@@ -80,6 +80,10 @@ if (!function_exists('session')) {
      */
     function session($key = NULL, $value = NULL)
     {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
         if ($key == NULL) {
             return $_SESSION;
         } else if ($value == NULL && isset($_SESSION[$key])) {
