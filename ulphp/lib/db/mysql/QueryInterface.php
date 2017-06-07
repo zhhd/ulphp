@@ -27,7 +27,7 @@ interface QueryInterface
      * @param string       $query  sql语句
      * @param array | null $params 参数
      * @param int          $fetchMode
-     * @return mixed
+     * @return array|bool 没有数据返回false
      */
     public function row($query, $params = NULL, $fetchMode = PDO::FETCH_ASSOC);
 
@@ -36,7 +36,7 @@ interface QueryInterface
      * @param string       $query  sql语句
      * @param array | null $params 参数
      * @param int          $fetchMode
-     * @return mixed
+     * @return array|bool 没有数据返回false
      */
     public function select($query, $params = NULL, $fetchMode = PDO::FETCH_ASSOC);
 
@@ -83,5 +83,5 @@ interface QueryInterface
     /**
      * 回滚事务
      */
-    public function rollBackTrans();
+    public function rollBack();
 }

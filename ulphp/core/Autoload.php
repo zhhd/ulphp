@@ -8,7 +8,6 @@
 
 namespace ulphp\core;
 
-
 class Autoload
 {
     public function run()

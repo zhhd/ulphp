@@ -536,7 +536,7 @@ class Model
      * 获取单条数据
      * @param array  $data  条件
      * @param string $filed 列
-     * @return mixed
+     * @return array|bool 没有数据返回false
      */
     public function row(array $data = [], $filed = NULL)
     {
@@ -600,7 +600,7 @@ class Model
      * 获取全部数据
      * @param array      $data  条件
      * @param null|array $filed 列
-     * @return mixed
+     * @return array|bool 没有数据返回false
      */
     public function select(array $data = [], $filed = NULL)
     {
