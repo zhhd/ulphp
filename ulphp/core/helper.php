@@ -318,6 +318,15 @@ function isGet()
 }
 
 /**
+ * 引入视图
+ * @param $file string
+ */
+function load_view($file)
+{
+    include APP_PATH . 'view/' . $file . '.php';
+}
+
+/**
  * 写日志
  * @param $log
  */
