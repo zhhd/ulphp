@@ -305,6 +305,19 @@ function redis_db($file = 'redis')
 }
 
 /**
+ * 判断请求类型
+ * @return bool
+ */
+function isGet()
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
  * 写日志
  * @param $log
  */
