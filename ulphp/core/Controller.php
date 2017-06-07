@@ -29,6 +29,8 @@ class Controller
         self::$controller = $controller;
         self::$method     = $method;
 
+        unset($_GET['s']);
+
         $class  = '\controller\\' . $controller;
         $obj    = new $class();
         $result = call_user_func([$obj, $method]);
