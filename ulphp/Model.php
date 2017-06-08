@@ -720,6 +720,24 @@ class Model
     }
 
     /**
+     * 删除数据
+     * @param array $where 条件
+     * @return int 影响行数
+     */
+    public function delete(array $where = [])
+    {
+        $where    = $this->getWhere($where);
+        $whereStr = $where[0];
+        $param    = $where[1];
+
+        $query          = "delete form $this->table $whereStr";
+        $this->last_sql = $query;
+        $this->clear();
+
+        return $this->getDb()->delete($query, $param);
+    }
+
+    /**
      * count
      * @param string | array $filed 列
      * @param array          $data  数据
@@ -916,7 +934,7 @@ class Model
         $query          = "select max($filed) as max from $this->table $where $having";
         $this->last_sql = $query;
         $this->clear();
-        
+
         $max = $this->getDb()->row($query, $param)['max'];
 
         return empty($max) ? 0 : $max;
