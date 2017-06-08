@@ -730,7 +730,7 @@ class Model
         $whereStr = $where[0];
         $param    = $where[1];
 
-        $query          = "delete form $this->table $whereStr";
+        $query          = "delete from $this->table $whereStr";
         $this->last_sql = $query;
         $this->clear();
 
