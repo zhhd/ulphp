@@ -7,7 +7,7 @@
  * Time: 14:07
  */
 
-namespace ulphp;
+namespace ulphp\manage;
 
 
 use ulphp\lib\db\mysql\Query as qMysql;

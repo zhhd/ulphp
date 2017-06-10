@@ -289,7 +289,7 @@ function mysql_db($file = 'mysql')
 {
     $config = config($file);
 
-    return \ulphp\DBManage::getMysql($config);
+    return \ulphp\manage\DBManage::getMysql($config);
 }
 
 /**
@@ -301,7 +301,7 @@ function redis_db($file = 'redis')
 {
     $config = config($file);
 
-    return \ulphp\DBManage::getRedis($config);
+    return \ulphp\manage\DBManage::getRedis($config);
 }
 
 /**
@@ -327,28 +327,19 @@ function load_view($file)
 }
 
 /**
- * 写日志
- * @param $log
+ * 向文件写入日志
+ * @param $content
  */
-function write_log($log)
+function log_file($content)
 {
-    $in_file = ['Config.php', 'Controller.php', 'Log.php', 'Logic.php', 'Model.php', 'Static.php', 'Ulphp.php', 'View.php'];
-    foreach ($in_file as $row) {
-        if (strpos($log, $row) !== FALSE) {
-            header("HTTP/1.1 404 Not Found");
-            header("Status: 404 Not Found");
+    \ulphp\manage\LogManage::getLogFile()->set($content);
+}
 
-            return;
-        }
-    }
-
-    $file = APP_PATH . 'runtime/log/' . now('Y-m-d') . '.txt';
-    $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
-    $file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
-
-    file_put_contents($file, now() . '      ' . $log . "\r\n", FILE_APPEND);
-
-    if (DEBUG) {
-        echo $log;
-    }
+/**
+ * 文件缓存对象
+ * @return \ulphp\lib\cache\CacheFile
+ */
+function cache_file()
+{
+    return \ulphp\manage\CacheManage::getCacheFile();
 }

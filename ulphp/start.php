@@ -28,7 +28,7 @@ define('APP_PATH', __DIR__ . '/../');
 require __DIR__ . '/core/Autoload.php';
 require __DIR__ . '/core/Exception.php';
 require __DIR__ . '/core/Controller.php';
-require __DIR__ . '/core/helper.php';
+require __DIR__ . '/helper.php';
 
 /**
  * 加载数据库帮助类

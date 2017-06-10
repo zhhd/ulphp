@@ -25,25 +25,34 @@ class Exception
     public function appException($e)
     {
         $log = '<b>Exception error:</b> ' . $e->getMessage() . '<br>';
-        $log .= '. file:' . $e->getFile() . '<br>';
-        $log .= '. line:' . $e->getLine();
-        write_log($log);
+        $log .= 'file:' . $e->getFile() . '<br>';
+        $log .= 'line:' . $e->getLine();
+        log_file($log);
+        if (DEBUG) {
+            echo $log;
+        }
     }
 
     public function appError($errno, $errstr, $errfile, $errline)
     {
         $log = "<b>Custom error:</b> [$errno] $errstr<br>";
         $log .= " Error on line $errline in $errfile<br>";
-        write_log($log);
+        log_file($log);
+        if (DEBUG) {
+            echo $log;
+        }
     }
 
     public function appShutdown()
     {
         if (!is_null($error = error_get_last()) && self::isFatal($error['type'])) {
             $log = '<b>Shutdown error:</b> ' . $error['message'] . '<br>';
-            $log .= '. file:' . $error['file'] . '<br>';
-            $log .= '. line:' . $error['line'];
-            write_log($log);
+            $log .= 'file:' . $error['file'] . '<br>';
+            $log .= 'line:' . $error['line'];
+            log_file($log);
+            if (DEBUG) {
+                echo $log;
+            }
         }
 
         return TRUE;
