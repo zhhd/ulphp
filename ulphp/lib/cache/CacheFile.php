@@ -40,6 +40,7 @@ class CacheFile implements CacheInterface
             $expire = fgets($file);
 
             if (0 != $expire && $_SERVER['REQUEST_TIME'] > filemtime($filename) + $expire) {
+                fclose($file);
                 //缓存过期删除缓存文件
                 $this->unlink($filename);
             } else {
@@ -48,8 +49,9 @@ class CacheFile implements CacheInterface
                     $content .= fgets($file) . "\r\n";
                 }
                 $default = $content;
+                fclose($file);
             }
-            fclose($file);
+
         }
 
         return $default;
