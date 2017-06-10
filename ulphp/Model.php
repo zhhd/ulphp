@@ -568,13 +568,13 @@ class Model
 
     /**
      * 分页
-     * @param int $offset
+     * @param int $page
      * @param int $limit
      * @return $this
      */
-    public function page($offset, $limit)
+    public function page($page, $limit)
     {
-        $this->page['offset'] = $offset;
+        $this->page['offset'] = ($page - 1) * $limit;
         $this->page['limit']  = $limit;
 
         return $this;
