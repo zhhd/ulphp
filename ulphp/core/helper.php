@@ -342,7 +342,7 @@ function write_log($log)
         }
     }
 
-    $file = APP_PATH . 'log/' . now('Y-m-d') . '.txt';
+    $file = APP_PATH . 'runtime/log/' . now('Y-m-d') . '.txt';
     $file = str_replace('/', DIRECTORY_SEPARATOR, $file);
     $file = str_replace('\\', DIRECTORY_SEPARATOR, $file);
 
