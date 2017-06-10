@@ -82,6 +82,8 @@ class Model
      */
     protected $right_join = [];
 
+    protected $page = [];
+
     /**
      * 最后一次运行sql
      * @var string
@@ -332,7 +334,25 @@ class Model
     }
 
     /**
+     * 获取 page
+     * @return string
+     */
+    private function getPage()
+    {
+        $page = '';
+        if (isset($this->page['limit'])) {
+            $page .= ' limit ' . $this->page['limit'];
+        }
+        if (isset($this->page['offset'])) {
+            $page .= ' offset ' . $this->page['offset'];
+        }
+
+        return $page;
+    }
+
+    /**
      * 获取 join
+     * @return string
      */
     private function getJoin()
     {
@@ -354,7 +374,8 @@ class Model
     }
 
     /**
-     * 获取 left join
+     * left join
+     * @return string
      */
     private function getLeftJoin()
     {
@@ -376,7 +397,8 @@ class Model
     }
 
     /**
-     * 获取 right join
+     * right join
+     * @return string
      */
     private function getRightJoin()
     {
@@ -520,6 +542,44 @@ class Model
         return $this;
     }
 
+    /**
+     * offset
+     * @param $offset
+     * @return $this
+     */
+    public function offset($offset)
+    {
+        $this->page['offset'] = $offset;
+
+        return $this;
+    }
+
+    /**
+     * limit
+     * @param $limit
+     * @return $this
+     */
+    public function limit($limit)
+    {
+        $this->page['limit'] = $limit;
+
+        return $this;
+    }
+
+    /**
+     * 分页
+     * @param int $offset
+     * @param int $limit
+     * @return $this
+     */
+    public function page($offset, $limit)
+    {
+        $this->page['offset'] = $offset;
+        $this->page['limit']  = $limit;
+
+        return $this;
+    }
+
     public function clear()
     {
         $this->join       = [];
@@ -530,6 +590,7 @@ class Model
         $this->group      = [];
         $this->order      = [];
         $this->having     = [];
+        $this->page       = [];
     }
 
     /**
@@ -650,10 +711,12 @@ class Model
         }
         $having = $having[0];
 
+        $page = $this->getPage();
+
         /**
          * 拼接sql
          */
-        $query          = "select $filed from $this->table $join $leftJoin $rightJoin $where $group $having $order";
+        $query          = "select $filed from $this->table $join $leftJoin $rightJoin $where $group $having $order $page";
         $this->last_sql = $query;
         $this->clear();
 
