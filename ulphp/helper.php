@@ -8,13 +8,16 @@
 
 /**
  * 全局过滤函数
- * @param $str
+ * @param string     $str
+ * @param array|null $filterFun 过滤函数
  * @return mixed
  */
-function filter($str)
+function filter($str, $filterFun = NULL)
 {
-    $_filterFun = array("addslashes", "trim", "strip_tags");
-    foreach ($_filterFun as $fun) {
+    if ($filterFun == NULL) {
+        $filterFun = ["addslashes", "trim", "strip_tags"];
+    }
+    foreach ($filterFun as $fun) {
         $str = call_user_func($fun, $str);
     }
 
@@ -23,8 +26,8 @@ function filter($str)
 
 /**
  * post获取
- * @param $key
- * @return null
+ * @param string $key
+ * @return null|string|array
  */
 function post($key = NULL)
 {
@@ -41,7 +44,7 @@ function post($key = NULL)
 /**
  * get获取
  * @param null $key
- * @return mixed|null
+ * @return null|string|array
  */
 function get($key = NULL)
 {
@@ -57,7 +60,7 @@ function get($key = NULL)
 /**
  * post get 获取
  * @param $key
- * @return mixed|null
+ * @return null|string|array
  */
 function input($key)
 {
@@ -76,7 +79,7 @@ if (!function_exists('session')) {
      * session 获取
      * @param null $key
      * @param null $value
-     * @return mixed
+     * @return array|null|string
      */
     function session($key = NULL, $value = NULL)
     {
@@ -90,9 +93,9 @@ if (!function_exists('session')) {
             return $_SESSION[$key];
         } else if ($key != NULL && $value != NULL) {
             $_SESSION[$key] = $value;
-        } else {
-            return NULL;
         }
+
+        return NULL;
     }
 }
 
@@ -130,7 +133,7 @@ function now($format = 'Y-m-d H:i:s')
 
 /**
  * http 请求
- * @param string $url
+ * @param string $url    网址
  * @param array  $params 参数
  * @param string $method 提交方式
  * @param array  $header 头部
@@ -181,8 +184,8 @@ function http($url, $params = [], $method = 'GET', $header = array(), $multi = F
 
 /**
  * 重定向
- * @param     $url
- * @param int $code
+ * @param string $url
+ * @param int    $code
  */
 function redirect($url, $code = 302)
 {
@@ -249,7 +252,7 @@ function ip($type = 0, $adv = FALSE)
 
 /**
  * json 中文不转义
- * @param $value
+ * @param mixed $value
  * @return string
  */
 function json($value)
@@ -258,9 +261,9 @@ function json($value)
 }
 
 /**
- * 获取地址
- * @param null  $controller
- * @param array $params
+ * 获取地址，不填为当前地址
+ * @param null|string $controller
+ * @param array       $params
  * @return string
  */
 function url($controller = NULL, $params = [])
