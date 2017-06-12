@@ -31,6 +31,7 @@ www  WEB部署目录（或者子目录）
 ├─static                静态文件
 ├─ulphp                 框架核心文件
 ├─view                  视图层
+├─~runtime              记录日志及缓存文件
 ├─README.md             README 文件
 ├─index.phg             入口文件
 ~~~
