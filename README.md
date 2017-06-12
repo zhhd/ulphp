@@ -1,6 +1,8 @@
 #ulphp 
 
->version 1.3
+>version 1.4
+
+> `注：自定义函数文件命名请勿和框架自带命名冲突`
 
 ##nginx部署
 
@@ -17,26 +19,23 @@ location /project/ {
 </code>
 </pre>
 
-#文档帮助
-
 ## 目录结构
 
 初始的目录结构如下：
 
 ~~~
 www  WEB部署目录（或者子目录）
-├─common                自定义函数文件
-├─config                配置文件目录
-├─controller            控制器层目录
-├─log                   日志目录
-├─logic                 逻辑层目录
-├─model                 模块目录
-├─static                静态文件
-├─ulphp                 框架核心文件
-├─view                  视图层
-├─~runtime              记录日志及缓存文件
-├─README.md             README 文件
-├─index.phg             入口文件
+├─common                自定义函数文件（必须，包括common.php）
+├─config                配置文件目录（可选）
+├─controller            控制器层目录（必须）
+├─logic                 逻辑层目录（可选）
+├─model                 模块目录（可选）
+├─static                静态文件（可选）
+├─ulphp                 框架核心文件（必须）
+├─view                  视图层（可选）
+├─~runtime              记录日志及缓存文件（必须，Linux权限7777）
+├─README.md             README 文件（可选）
+├─index.phg             入口文件（必须）
 ~~~
 
 ## 命名规范
@@ -61,5 +60,3 @@ www  WEB部署目录（或者子目录）
 
 ### 数据表和字段
 *   数据表和字段采用小写加下划线方式命名，并注意字段名不要以下划线开头，例如 `think_user` 表和 `user_name`字段，不建议使用驼峰和中文作为数据表字段命名。
-
-> `注：自定义函数文件命名请勿和框架自带命名冲突`
