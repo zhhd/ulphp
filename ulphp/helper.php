@@ -8,15 +8,12 @@
 
 /**
  * 全局过滤函数
- * @param string     $str
- * @param array|null $filterFun 过滤函数
+ * @param string $str
+ * @param array  $filterFun 过滤函数
  * @return mixed
  */
-function filter($str, $filterFun = NULL)
+function filter($str, $filterFun = ["addslashes", "trim", "strip_tags"])
 {
-    if ($filterFun == NULL) {
-        $filterFun = ["addslashes", "trim", "strip_tags"];
-    }
     foreach ($filterFun as $fun) {
         $str = call_user_func($fun, $str);
     }
