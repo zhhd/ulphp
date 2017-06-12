@@ -25,17 +25,17 @@ location /project/ {
 
 ~~~
 www  WEB部署目录（或者子目录）
-├─common                自定义函数文件（必须，包括common.php）
-├─config                配置文件目录（可选）
-├─controller            控制器层目录（必须）
-├─logic                 逻辑层目录（可选）
-├─model                 模块目录（可选）
-├─static                静态文件（可选）
-├─ulphp                 框架核心文件（必须）
-├─view                  视图层（可选）
-├─~runtime              记录日志及缓存文件（必须，Linux权限7777）
-├─README.md             README 文件（可选）
-├─index.phg             入口文件（必须）
+├─common                自定义函数文件     (必须，包括common.php)
+├─config                配置文件目录       (可选)
+├─controller            控制器层目录       (必须)
+├─logic                 逻辑层目录         (可选)
+├─model                 模块目录           (可选)
+├─static                静态文件           (可选)
+├─ulphp                 框架核心文件        (必须)
+├─view                  视图层             (可选)
+├─~runtime              记录日志及缓存文件   (必须，Linux权限7777)
+├─README.md             README 文件        (可选)
+├─index.phg             入口文件            (必须)
 ~~~
 
 ## 命名规范
