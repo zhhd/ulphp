@@ -27,7 +27,7 @@ class Exception
         $log = '<b>Exception error:</b> ' . $e->getMessage() . '<br>';
         $log .= 'file:' . $e->getFile() . '<br>';
         $log .= 'line:' . $e->getLine();
-        log_file($log);
+        log_file()->set($log);
         if (DEBUG) {
             echo $log;
         }
@@ -37,7 +37,7 @@ class Exception
     {
         $log = "<b>Custom error:</b> [$errno] $errstr<br>";
         $log .= " Error on line $errline in $errfile<br>";
-        log_file($log);
+        log_file()->set($log);
         if (DEBUG) {
             echo $log;
         }
@@ -49,7 +49,7 @@ class Exception
             $log = '<b>Shutdown error:</b> ' . $error['message'] . '<br>';
             $log .= 'file:' . $error['file'] . '<br>';
             $log .= 'line:' . $error['line'];
-            log_file($log);
+            log_file()->set($log);
             if (DEBUG) {
                 echo $log;
             }

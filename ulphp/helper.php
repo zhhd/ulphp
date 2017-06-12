@@ -98,7 +98,7 @@ if (!function_exists('session')) {
 
 /**
  * 读取配置文件
- * @param $file
+ * @param string $file
  * @return mixed
  */
 function config($file)
@@ -327,12 +327,12 @@ function load_view($file)
 }
 
 /**
- * 向文件写入日志
- * @param $content
+ * 文件日志对象
+ * @return \ulphp\lib\log\LogFile
  */
-function log_file($content)
+function log_file()
 {
-    \ulphp\manage\LogManage::getLogFile()->set($content);
+    return \ulphp\manage\LogManage::getLogFile();
 }
 
 /**
