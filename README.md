@@ -1,4 +1,6 @@
-#ulphp 1.0
+#ulphp 
+
+>version 1.0
 
 ##nginx部署
 
