@@ -27,6 +27,32 @@ class CacheFile implements CacheInterface
     }
 
     /**
+     * 键是否存在
+     * @param $key
+     * @return bool
+     */
+    public function key_exists($key)
+    {
+        $filename = $this->path . md5($key);
+        if (is_file($filename)) {
+            $file   = fopen($filename, 'r');
+            $expire = fgets($file);
+            if (0 != $expire && $_SERVER['REQUEST_TIME'] > filemtime($filename) + $expire) {
+                fclose($file);
+                $this->unlink($filename);
+
+                return FALSE;
+            } else {
+                fclose($file);
+
+                return TRUE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    /**
      * 获取缓存
      * @param string $key     缓存键
      * @param bool   $default 缓存不存在返回值
