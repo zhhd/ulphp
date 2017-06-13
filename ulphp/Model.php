@@ -804,6 +804,7 @@ class Model
                 $param[":f_{$key}_{$i}"] = $value;
             }
             $values[] = '(' . implode(',', $value_sub) . ')';
+            $i++;
         }
         $filed  = implode(',', $filed);
         $values = implode(',', $values);
