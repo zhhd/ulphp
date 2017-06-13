@@ -269,8 +269,17 @@ function json($value)
 function url($controller = NULL, $params = [])
 {
     if (empty($controller)) {
-        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] .
-            (empty($_SERVER['QUERY_STRING']) ? '' : '?' . $_SERVER['QUERY_STRING']);
+        if (!empty($_SERVER['QUERY_STRING']) && count($params)) {
+            $param = '?' . $_SERVER['QUERY_STRING'] . '&' . http_build_query($params);
+        } else if (count($params)) {
+            $param = '?' . http_build_query($params);
+        } else if (!empty($_SERVER['QUERY_STRING'])) {
+            $param = '?' . $_SERVER['QUERY_STRING'];
+        } else {
+            $param = '';
+        }
+
+        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $param;
     } else {
         $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $controller . '.html' .
             (count($params) ? '?' . http_build_query($params) : '');
