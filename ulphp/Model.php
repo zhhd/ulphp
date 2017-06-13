@@ -758,7 +758,7 @@ class Model
     }
 
     /**
-     * 插入数据
+     * 单条插入数据
      * @param array $data 数据
      * @return int 最后一次插入id
      */
@@ -776,6 +776,39 @@ class Model
         $values = implode(',', $values);
 
         $query          = "insert into $this->table ($filed) values ($values)";
+        $this->last_sql = $query;
+        $this->clear();
+
+        return $this->getDb()->insert($query, $param);
+    }
+
+    /**
+     * 多条插入数据
+     * @param array $data 数据
+     * @return int
+     */
+    public function insertMore(array $data = [])
+    {
+        $filed  = [];
+        $values = [];
+        $param  = [];
+
+        foreach ($data[0] as $key => $value) {
+            $filed[] = "`$key`";
+        }
+        $i = 0;
+        foreach ($data as $item) {
+            $value_sub = [];
+            foreach ($item as $key => $value) {
+                $value_sub[]             = ":f_{$key}_{$i}";
+                $param[":f_{$key}_{$i}"] = $value;
+            }
+            $values[] = '(' . implode(',', $value_sub) . ')';
+        }
+        $filed  = implode(',', $filed);
+        $values = implode(',', $values);
+
+        $query          = "insert into $this->table ($filed) values $values";
         $this->last_sql = $query;
         $this->clear();
 
