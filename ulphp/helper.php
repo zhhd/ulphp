@@ -12,7 +12,7 @@
  * @param array  $filterFun 过滤函数
  * @return mixed
  */
-function filter($str, $filterFun = ["addslashes", "trim", "strip_tags"])
+function filter($str, $filterFun)
 {
     foreach ($filterFun as $fun) {
         $str = call_user_func($fun, $str);
@@ -23,15 +23,16 @@ function filter($str, $filterFun = ["addslashes", "trim", "strip_tags"])
 
 /**
  * post获取
- * @param string $key
+ * @param string|null $key       键
+ * @param array       $filterFun 过滤函数
  * @return null|string|array
  */
-function post($key = NULL)
+function post($key = NULL, $filterFun = ["addslashes", "trim", "strip_tags"])
 {
     if ($key == NULL) {
         return $_POST;
     } else if (isset($_POST[$key])) {
-        return filter($_POST[$key]);
+        return filter($_POST[$key], $filterFun);
     } else {
         return NULL;
     }
@@ -40,15 +41,16 @@ function post($key = NULL)
 
 /**
  * get获取
- * @param null $key
+ * @param string|null $key       键
+ * @param array       $filterFun 过滤函数
  * @return null|string|array
  */
-function get($key = NULL)
+function get($key = NULL, $filterFun = ["addslashes", "trim", "strip_tags"])
 {
     if ($key == NULL) {
         return $_GET;
     } else if (isset($_GET[$key])) {
-        return filter($_GET[$key]);
+        return filter($_GET[$key], $filterFun);
     } else {
         return NULL;
     }

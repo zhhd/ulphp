@@ -19,7 +19,7 @@ error_reporting(E_ALL | E_STRICT);
 /**
  * 当前框架版本
  */
-define('VERSION', '1.4');
+define('VERSION', '1.5');
 
 /**
  * 常量设置
