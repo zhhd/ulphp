@@ -9,7 +9,7 @@
 /**
  * 全局过滤函数
  * @param string $str
- * @param array  $filterFun 过滤函数
+ * @param array   $filterFun 过滤函数
  * @return mixed
  */
 function filter($str, $filterFun)
