@@ -9,7 +9,7 @@
 /**
  * 全局过滤函数
  * @param string $str
- * @param array   $filterFun 过滤函数
+ * @param array  $filterFun 过滤函数
  * @return mixed
  */
 function filter($str, $filterFun)
@@ -58,13 +58,14 @@ function get($key = NULL, $filterFun = ["addslashes", "trim", "strip_tags"])
 
 /**
  * post get 获取
- * @param $key
+ * @param       $key
+ * @param array $filterFun 过滤函数
  * @return null|string|array
  */
-function input($key)
+function input($key, $filterFun = ["addslashes", "trim", "strip_tags"])
 {
-    if (is_null($value = post($key))) {
-        return get($key);
+    if (is_null($value = post($key, $filterFun))) {
+        return get($key, $filterFun);
     } else {
         return $value;
     }
