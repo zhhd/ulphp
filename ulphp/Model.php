@@ -94,7 +94,7 @@ class Model extends Query
     {
         $class = get_called_class();
         if (!isset(self::$query[$class])) {
-            self::$query[$class]        = new Query();
+            self::$query[$class]        = new self();
             self::$query[$class]->table = self::getMTable();
         }
 
