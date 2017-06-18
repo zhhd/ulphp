@@ -20,9 +20,9 @@ class Model extends Query
 
     /**
      * 查询类
-     * @var
+     * @var array
      */
-    private static $query;
+    private static $query = [];
 
     function __construct()
     {
@@ -60,29 +60,27 @@ class Model extends Query
     }
 
     /**
-     * 获取类名
+     * 智能获取表名
      * @return mixed
      */
     public static function getMTable()
     {
-        if (empty(self::$m_table)) {
-            // 当前类名
-            $class = get_called_class();
+        // 当前类名
+        $class = get_called_class();
 
-            // 当前模型名
-            $name = str_replace('\\', '/', $class);
-            $name = basename($name);
+        // 当前模型名
+        $name = str_replace('\\', '/', $class);
+        $name = basename($name);
 
-            // 当前表名
-            self::$m_table = lcfirst($name);
-            $_pattern      = '/([A-Z]+)/';
-            if (preg_match($_pattern, self::$m_table)) {
-                self::$m_table = preg_replace($_pattern, "_$1", self::$m_table);
-                self::$m_table = strtolower(self::$m_table);
-            }
-
-            self::$m_table = '`' . self::$m_table . '`';
+        // 当前表名
+        self::$m_table = lcfirst($name);
+        $_pattern      = '/([A-Z]+)/';
+        if (preg_match($_pattern, self::$m_table)) {
+            self::$m_table = preg_replace($_pattern, "_$1", self::$m_table);
+            self::$m_table = strtolower(self::$m_table);
         }
+
+        self::$m_table = '`' . self::$m_table . '`';
 
         return self::$m_table;
     }
@@ -94,12 +92,13 @@ class Model extends Query
      */
     public static function getQuery()
     {
-        if (empty(self::$query)) {
-            self::$query        = new Query();
-            self::$query->table = self::getMTable();
+        $class = get_called_class();
+        if (!isset(self::$query[$class])) {
+            self::$query[$class]        = new Query();
+            self::$query[$class]->table = self::getMTable();
         }
 
-        return self::$query;
+        return self::$query[$class];
     }
 
     /**
