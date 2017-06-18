@@ -152,4 +152,15 @@ class Model extends Query
     {
         return self::getQuery()->delete($data);
     }
+
+    /**
+     * 更新数据（实在不知道取什么名字了）
+     * @param $data
+     * @param $where
+     * @return int
+     */
+    public static function save(array $data, $where)
+    {
+        return self::getQuery()->update($data, $where);
+    }
 }
