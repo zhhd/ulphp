@@ -10,6 +10,11 @@ namespace ulphp\lib\db\mysql;
 
 use PDO;
 
+/**
+ * 数据库底层操作
+ * Class Query
+ * @package ulphp\lib\db\mysql
+ */
 class Query implements QueryInterface
 {
     /**
