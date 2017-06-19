@@ -30,6 +30,22 @@ class Model extends Query
     }
 
     /**
+     * 获取Query
+     * @return Model
+     */
+    public static function getQuery()
+    {
+        $class = get_called_class();
+        if (!isset(self::$query[$class])) {
+            $self                = new static();
+            $self->table         = self::getMTable();
+            self::$query[$class] = $self;
+        }
+
+        return self::$query[$class];
+    }
+
+    /**
      * 智能获取表名
      */
     protected function initTable()
@@ -63,7 +79,7 @@ class Model extends Query
      * 智能获取表名
      * @return mixed
      */
-    public static function getMTable()
+    protected static function getMTable()
     {
         // 当前类名
         $class = get_called_class();
@@ -85,43 +101,82 @@ class Model extends Query
         return self::$m_table;
     }
 
-
     /**
-     * 获取Query
-     * @return Query
+     * 获取单条数据
+     * @param array $data  条件
+     * @param null  $filed 列
+     * @param bool  $cache 缓存时间/秒，false表示不缓存
+     * @return array|bool|mixed
      */
-    public static function getQuery()
+    public function row(array $data = [], $filed = NULL, $cache = FALSE)
     {
-        $class = get_called_class();
-        if (!isset(self::$query[$class])) {
-            $self                = new static();
-            $self->table         = self::getMTable();
-            self::$query[$class] = $self;
+        $key = json_encode($data) . json_encode($filed) . $this->table . 'row';
+
+        if ($cache === FALSE) {
+            cache_file()->clear($key);
+
+            return parent::row($data, $filed);
+        } else {
+            if (cache_file()->key_exists($key)) {
+                return json_decode(cache_file()->get($key), TRUE);
+            } else {
+                $result = parent::row($data, $filed);
+                cache_file()->set($key, json_encode($result), $cache);
+
+                return $result;
+            }
         }
-
-        return self::$query[$class];
     }
 
     /**
-     * 单条查询
-     * @param array             $data  条件
-     * @param null|array|string $filed 列
-     * @return array|bool
+     * 获取多条数据
+     * @param array $data  条件
+     * @param null  $filed 列
+     * @param bool  $cache 缓存时间/秒，false表示不缓存
+     * @return array|bool|mixed
      */
-    public static function find(array $data = [], $filed = NULL)
+    public function select(array $data = [], $filed = NULL, $cache = FALSE)
     {
-        return self::getQuery()->row($data, $filed);
+        $key = json_encode($data) . json_encode($filed) . $this->table . 'select';
+
+        if ($cache === FALSE) {
+            cache_file()->clear($key);
+
+            return parent::select($data, $filed);
+        } else {
+            if (cache_file()->key_exists($key)) {
+                return json_decode(cache_file()->get($key), TRUE);
+            } else {
+                $result = parent::select($data, $filed);
+                cache_file()->set($key, json_encode($result), $cache);
+
+                return $result;
+            }
+        }
     }
 
     /**
-     * 多条查询
-     * @param array             $data  条件
-     * @param null|array|string $filed 列
-     * @return array|bool
+     * 获取单条数据
+     * @param array $data  条件
+     * @param null  $filed 列
+     * @param bool  $cache 缓存时间/秒，false表示不缓存
+     * @return array|bool|mixed
      */
-    public static function all(array $data = [], $filed = NULL)
+    public static function find(array $data = [], $filed = NULL, $cache = FALSE)
     {
-        return self::getQuery()->select($data, $filed);
+        return self::getQuery()->row($data, $filed, $cache);
+    }
+
+    /**
+     * 获取多条数据
+     * @param array $data  条件
+     * @param null  $filed 列
+     * @param bool  $cache 缓存时间/秒，false表示不缓存
+     * @return array|bool|mixed
+     */
+    public static function all(array $data = [], $filed = NULL, $cache = FALSE)
+    {
+        return self::getQuery()->select($data, $filed, $cache);
     }
 
     /**
@@ -155,7 +210,7 @@ class Model extends Query
     }
 
     /**
-     * 更新数据（实在不知道取什么名字了）
+     * 更新数据
      * @param $data
      * @param $where
      * @return int

@@ -104,16 +104,22 @@ class CacheFile implements CacheInterface
     public function clear($key = NULL)
     {
         $dir = $this->path;
+
         if (is_dir($dir)) {
-            if ($dh = opendir($dir)) {
-                while (($file = readdir($dh)) !== FALSE) {
-                    if (is_file($dir . $file)) {
-                        $this->unlink($dir . $file);
+            if ($key === NULL) {
+                if ($dh = opendir($dir)) {
+                    while (($file = readdir($dh)) !== FALSE) {
+                        if (is_file($dir . $file)) {
+                            $this->unlink($dir . $file);
+                        }
                     }
+                    closedir($dh);
                 }
-                closedir($dh);
+            } else {
+                $this->unlink($dir . md5($key));
             }
         }
+
     }
 
     /**
