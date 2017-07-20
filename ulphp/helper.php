@@ -27,7 +27,7 @@ function filter($str, $filterFun)
  * @param array       $filterFun 过滤函数
  * @return null|string|array
  */
-function post($key = NULL, $filterFun = ["addslashes", "trim", "strip_tags"])
+function post($key = NULL, $filterFun = [])
 {
     if ($key == NULL) {
         return $_POST;
@@ -62,7 +62,7 @@ function get($key = NULL, $filterFun = ["addslashes", "trim", "strip_tags"])
  * @param array $filterFun 过滤函数
  * @return null|string|array
  */
-function input($key, $filterFun = ["addslashes", "trim", "strip_tags"])
+function input($key, $filterFun = [])
 {
     if (is_null($value = post($key, $filterFun))) {
         return get($key, $filterFun);
