@@ -45,7 +45,7 @@ function post($key = NULL, $filterFun = [])
  * @param array       $filterFun 过滤函数
  * @return null|string|array
  */
-function get($key = NULL, $filterFun = ["addslashes", "trim", "strip_tags"])
+function get($key = NULL, $filterFun = [])
 {
     if ($key == NULL) {
         return $_GET;
