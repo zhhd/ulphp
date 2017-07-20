@@ -36,6 +36,6 @@ class LogFile implements LogInterface
 
         $_content = "记录时间：" . now();
         $_content .= " 日志内容：$content\r\n";
-        file_put_contents($path, $_content);
+        file_put_contents($path, $_content, FILE_APPEND);
     }
 }
