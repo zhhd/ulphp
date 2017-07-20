@@ -31,9 +31,16 @@ class Controller
 
         unset($_GET['s']);
 
-        $class  = '\controller\\' . $controller;
-        $obj    = new $class();
-        $result = call_user_func([$obj, $method]);
+        $class = '\controller\\' . $controller;
+        $obj   = new $class();
+
+        $refClass  = new \ReflectionClass($class);
+        $parameter = [];
+        foreach ($refClass->getMethod($method)->getParameters() as $item) {
+            $parameter[] = input($item->name);
+        }
+
+        $result = call_user_func_array([$obj, $method], $parameter);
         if (is_int($result) || is_string($result)) {
             echo $result;
         } else if (!is_null($result)) {
