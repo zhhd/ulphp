@@ -19,6 +19,9 @@ location /project/ {
 </code>
 </pre>
 
+## 文档中心
+> http://git.oschina.net/kanpo/ulphp/wikis/home
+
 ## 目录结构
 
 初始的目录结构如下：
