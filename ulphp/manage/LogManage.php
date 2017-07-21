@@ -20,10 +20,10 @@ class LogManage
      */
     public static function getLogFile()
     {
-        if (empty(self::$log_file)) {
-            self::$log_file = new LogFile();
+        if (empty(static::$log_file)) {
+            static::$log_file = new LogFile();
         }
 
-        return self::$log_file;
+        return static::$log_file;
     }
 }

@@ -25,7 +25,7 @@ class Controller
      */
     protected function assign($key = NULL, $value = NULL)
     {
-        $this->assign[] = ['key' => $key, 'value' => $value];
+        $this->assign[$key] = $value;
     }
 
     /**
@@ -52,11 +52,7 @@ class Controller
         /**
          * 变量渲染
          */
-        foreach ($this->assign as $value) {
-            $key   = $value['key'];
-            $value = $value['value'];
-            $$key  = $value;
-        }
+        extract($this->assign);
 
         /**
          * 引入视图

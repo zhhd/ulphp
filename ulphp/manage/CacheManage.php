@@ -20,10 +20,10 @@ class CacheManage
      */
     public static function getCacheFile()
     {
-        if (empty(self::$cache_file)) {
-            self::$cache_file = new CacheFile();
+        if (empty(static::$cache_file)) {
+            static::$cache_file = new CacheFile();
         }
 
-        return self::$cache_file;
+        return static::$cache_file;
     }
 }

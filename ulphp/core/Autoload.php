@@ -12,10 +12,10 @@ class Autoload
 {
     public function run()
     {
-        $this->autoload();
+        $this->autoloader();
     }
 
-    public function autoload()
+    public function autoloader()
     {
         spl_autoload_register([$this, 'package']);
     }

@@ -32,11 +32,11 @@ class DBManage
         $port     = $config['hostport'];
         $charset  = $config['charset'];
 
-        if (!isset(self::$mysql[$host . $db_name])) {
-            self::$mysql[$host . $db_name] = new qMysql($host, $port, $user, $password, $db_name, $charset);
+        if (!isset(static::$mysql[$host . $db_name])) {
+            static::$mysql[$host . $db_name] = new qMysql($host, $port, $user, $password, $db_name, $charset);
         }
 
-        return self::$mysql[$host . $db_name];
+        return static::$mysql[$host . $db_name];
     }
 
     /**
@@ -51,10 +51,10 @@ class DBManage
         $port     = $config['port'];
         $timeout  = $config['timeout'];
 
-        if (!isset(self::$redis[$host . $host])) {
-            self::$redis[$host . $host] = new qRedis($host, $password, $port, $timeout);
+        if (!isset(static::$redis[$host . $host])) {
+            static::$redis[$host . $host] = new qRedis($host, $password, $port, $timeout);
         }
 
-        return self::$redis[$host . $host];
+        return static::$redis[$host . $host];
     }
 }

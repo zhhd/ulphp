@@ -26,8 +26,8 @@ class Controller
         $controller = is_null(($controller = array_shift($s))) ? $this->ucFormat($this->default_controller) : $this->ucFormat($controller);
         $method     = is_null(($method = array_shift($s))) ? $this->default_method : $method;
 
-        self::$controller = $controller;
-        self::$method     = $method;
+        static::$controller = $controller;
+        static::$method     = $method;
 
         unset($_GET['s']);
 

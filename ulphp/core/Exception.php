@@ -45,7 +45,7 @@ class Exception
 
     public function appShutdown()
     {
-        if (!is_null($error = error_get_last()) && self::isFatal($error['type'])) {
+        if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
             $log = '<b>Shutdown error:</b> ' . $error['message'] . '<br>';
             $log .= 'file:' . $error['file'] . '<br>';
             $log .= 'line:' . $error['line'];
