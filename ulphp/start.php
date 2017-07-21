@@ -13,8 +13,8 @@ ini_set('date.timezone', 'PRC');
 /**
  * 错误提示
  */
-ini_set("display_errors", "On");
-error_reporting(E_ALL | E_STRICT);
+//ini_set("display_errors", "On");
+//error_reporting(E_ALL | E_STRICT);
 
 /**
  * 当前框架版本
