@@ -46,6 +46,11 @@ class Controller
         } else if (!is_null($result)) {
             echo json($result);
         }
+
+        // 执行后置函数，可在自定义函数定义该函数
+        if (function_exists('postposition')) {
+            postposition($result);
+        }
     }
 
     public function ucFormat($controller)
