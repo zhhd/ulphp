@@ -1018,5 +1018,67 @@ class Query
         return empty($max) ? 0 : $max;
     }
 
+    /**
+     * 配合operation()函数使用
+     * @param string     $filed 列
+     * @param string|int $value 值
+     * @param string     $op    运算符
+     * @return array
+     */
+    public function opValues($filed, $value, $op)
+    {
+        return [
+            'filed' => $filed,
+            'value' => $value,
+            'op'    => $op,
+        ];
+    }
 
+    /**
+     * 字段做运算操作
+     * @param array $fileds [opValues(),...]
+     * @param array $data   条件
+     * @return int |bool
+     */
+    public function operation($fileds, $data)
+    {
+        /*
+         * 列
+         */
+        $filed = [];
+        foreach ($fileds as $row) {
+            $key     = $row['filed'];
+            $value   = $row['value'];
+            $op      = $row['op'];
+            $filed[] = "`$key`= `$key` $op $value";
+        }
+        $filed = implode(',', $filed);
+
+        /**
+         * where
+         */
+        $where = $this->getWhere($data);
+        $param = $where[1];
+        $where = $where[0];
+
+        /**
+         * having
+         */
+        $having = $this->getHaving();
+        if (!empty($having[0])) {
+            $param = array_merge($param, $having[1]);
+        }
+        $having = $having[0];
+
+        /**
+         * 拼接sql
+         */
+        $query          = "update $this->table set $filed $where $having";
+        $this->last_sql = $query;
+        $this->clear();
+
+        $last_id = $this->getDb()->update($query, $param);
+
+        return $last_id;
+    }
 }
