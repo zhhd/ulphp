@@ -48,13 +48,15 @@ class Controller
                 echo json($result);
             }
 
-            // 执行后置函数，可在自定义函数定义该函数
-            if (function_exists('postposition')) {
-                postposition($result);
-            }
         } catch (\Exception $e) {
             log_file()->set($e->getMessage());
-            echo json(['status' => FALSE, 'msg' => '服务器繁忙，请稍后重试~ NO:500']);
+            $result = json(['status' => FALSE, 'msg' => '服务器繁忙，请稍后重试~ NO:500']);
+            echo $result;
+        }
+
+        // 执行后置函数，可在自定义函数定义该函数
+        if (function_exists('postposition')) {
+            postposition($result);
         }
     }
 
