@@ -18,38 +18,43 @@ class Controller
 
     public function load()
     {
-        $s = ltrim(get('s'), '/');
-        $s = explode('/', $s);
-        $s = array_filter($s);
-        $s = str_replace('.html', '', $s);
+        try {
+            $s = ltrim(get('s'), '/');
+            $s = explode('/', $s);
+            $s = array_filter($s);
+            $s = str_replace('.html', '', $s);
 
-        $controller = is_null(($controller = array_shift($s))) ? $this->ucFormat($this->default_controller) : $this->ucFormat($controller);
-        $method     = is_null(($method = array_shift($s))) ? $this->default_method : $method;
+            $controller = is_null(($controller = array_shift($s))) ? $this->ucFormat($this->default_controller) : $this->ucFormat($controller);
+            $method     = is_null(($method = array_shift($s))) ? $this->default_method : $method;
 
-        static::$controller = $controller;
-        static::$method     = $method;
+            static::$controller = $controller;
+            static::$method     = $method;
 
-        unset($_GET['s']);
+            unset($_GET['s']);
 
-        $class = '\controller\\' . $controller;
-        $obj   = new $class();
+            $class = '\controller\\' . $controller;
+            $obj   = new $class();
 
-        $refClass  = new \ReflectionClass($class);
-        $parameter = [];
-        foreach ($refClass->getMethod($method)->getParameters() as $item) {
-            $parameter[] = input($item->name);
-        }
+            $refClass  = new \ReflectionClass($class);
+            $parameter = [];
+            foreach ($refClass->getMethod($method)->getParameters() as $item) {
+                $parameter[] = input($item->name);
+            }
 
-        $result = call_user_func_array([$obj, $method], $parameter);
-        if (is_int($result) || is_string($result)) {
-            echo $result;
-        } else if (!is_null($result)) {
-            echo json($result);
-        }
+            $result = call_user_func_array([$obj, $method], $parameter);
+            if (is_int($result) || is_string($result)) {
+                echo $result;
+            } else if (!is_null($result)) {
+                echo json($result);
+            }
 
-        // 执行后置函数，可在自定义函数定义该函数
-        if (function_exists('postposition')) {
-            postposition($result);
+            // 执行后置函数，可在自定义函数定义该函数
+            if (function_exists('postposition')) {
+                postposition($result);
+            }
+        } catch (\Exception $e) {
+            log_file()->set($e->getMessage());
+            echo json(['status' => FALSE, 'msg' => '服务器繁忙，请稍后重试~ NO:500']);
         }
     }
 
