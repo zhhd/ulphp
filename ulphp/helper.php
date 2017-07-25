@@ -152,15 +152,9 @@ function now($format = 'Y-m-d H:i:s')
  * @return mixed
  * @throws Exception
  */
-function http($url, $params = [], $method = 'GET', $header = array(), $multi = FALSE)
+function http($url, $params = [], $method = 'GET', $header = [], $multi = FALSE)
 {
-    $opts = array(
-        CURLOPT_TIMEOUT        => 30,
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_SSL_VERIFYPEER => FALSE,
-        CURLOPT_SSL_VERIFYHOST => FALSE,
-        CURLOPT_HTTPHEADER     => $header,
-    );
+    $opts = [CURLOPT_TIMEOUT => 30, CURLOPT_RETURNTRANSFER => 1, CURLOPT_SSL_VERIFYPEER => FALSE, CURLOPT_SSL_VERIFYHOST => FALSE, CURLOPT_HTTPHEADER => $header,];
 
     switch (strtoupper($method)) {
         case 'GET':
@@ -170,7 +164,7 @@ function http($url, $params = [], $method = 'GET', $header = array(), $multi = F
             } else {
                 $opts[CURLOPT_URL] = $url;
             }
-        break;
+            break;
         case 'POST':
         case 'post':
             //判断是否传输文件
@@ -178,7 +172,7 @@ function http($url, $params = [], $method = 'GET', $header = array(), $multi = F
             $opts[CURLOPT_URL]        = $url;
             $opts[CURLOPT_POST]       = 1;
             $opts[CURLOPT_POSTFIELDS] = $params;
-        break;
+            break;
         default:
             throw new Exception('不支持的请求方式！');
     }
@@ -188,7 +182,8 @@ function http($url, $params = [], $method = 'GET', $header = array(), $multi = F
     $data  = curl_exec($ch);
     $error = curl_error($ch);
     curl_close($ch);
-    if ($error) throw new Exception('请求发生错误：' . $error);
+    if ($error)
+        throw new Exception('请求发生错误：' . $error);
 
     return $data;
 }
@@ -292,8 +287,7 @@ function url($controller = NULL, $params = [])
 
         $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $param;
     } else {
-        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $controller . '.html' .
-            (count($params) ? '?' . http_build_query($params) : '');
+        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $controller . '.html' . (count($params) ? '?' . http_build_query($params) : '');
     }
 
     $url = str_replace('/index.php?s=', '', $url);
