@@ -26,7 +26,7 @@ class Model extends Query
      * 配置
      * @var
      */
-    public $config;
+    public $config = 'mysql';
 
     /**
      * 查询类
@@ -47,8 +47,8 @@ class Model extends Query
     {
         $class = get_called_class();
         if (!isset(static::$query[$class])) {
-            $self                = new static();
-            $self->table         = static::getMTable();
+            $self                  = new static();
+            $self->table           = static::getMTable();
             static::$query[$class] = $self;
         }
 
@@ -100,7 +100,7 @@ class Model extends Query
 
         // 当前表名
         static::$m_table = lcfirst($name);
-        $_pattern      = '/([A-Z]+)/';
+        $_pattern        = '/([A-Z]+)/';
         if (preg_match($_pattern, static::$m_table)) {
             static::$m_table = preg_replace($_pattern, "_$1", static::$m_table);
             static::$m_table = strtolower(static::$m_table);

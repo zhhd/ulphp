@@ -21,7 +21,7 @@ class Query
      * 配置文件名 config/mysql.php => mysql
      * @var string
      */
-    protected $config = 'mysql';
+    protected $config;
 
     /**
      * 表名
