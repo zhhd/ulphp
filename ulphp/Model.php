@@ -17,6 +17,16 @@ class Model extends Query
      * @var
      */
     private static $m_table;
+    /**
+     * 表名
+     * @var
+     */
+    public $table;
+    /**
+     * 配置
+     * @var
+     */
+    public $config;
 
     /**
      * 查询类

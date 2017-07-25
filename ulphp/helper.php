@@ -122,6 +122,17 @@ function config($file)
 }
 
 /**
+ * 实例化model
+ * @param string $table  表名
+ * @param string $config 配置
+ * @return \ulphp\Model
+ */
+function model($table, $config = 'mysql')
+{
+    return \ulphp\manage\ModelManage::model($table, $config);
+}
+
+/**
  * 当前时间
  * @param string $format
  * @return false|string
@@ -152,24 +163,24 @@ function http($url, $params = [], $method = 'GET', $header = array(), $multi = F
     );
 
     switch (strtoupper($method)) {
-    case 'GET':
-    case 'get':
-        if (count($params)) {
-            $opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
-        } else {
-            $opts[CURLOPT_URL] = $url;
-        }
-    break;
-    case 'POST':
-    case 'post':
-        //判断是否传输文件
-        $params                   = $multi ? $params : http_build_query($params);
-        $opts[CURLOPT_URL]        = $url;
-        $opts[CURLOPT_POST]       = 1;
-        $opts[CURLOPT_POSTFIELDS] = $params;
-    break;
-    default:
-        throw new Exception('不支持的请求方式！');
+        case 'GET':
+        case 'get':
+            if (count($params)) {
+                $opts[CURLOPT_URL] = $url . '?' . http_build_query($params);
+            } else {
+                $opts[CURLOPT_URL] = $url;
+            }
+        break;
+        case 'POST':
+        case 'post':
+            //判断是否传输文件
+            $params                   = $multi ? $params : http_build_query($params);
+            $opts[CURLOPT_URL]        = $url;
+            $opts[CURLOPT_POST]       = 1;
+            $opts[CURLOPT_POSTFIELDS] = $params;
+        break;
+        default:
+            throw new Exception('不支持的请求方式！');
     }
 
     $ch = curl_init();
