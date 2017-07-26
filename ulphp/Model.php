@@ -46,13 +46,13 @@ class Model extends Query
     public static function getQuery()
     {
         $class = get_called_class();
-        if (!isset(static::$query[$class])) {
+        if (!isset(self::$query[$class])) {
             $self                  = new static();
             $self->table           = static::getMTable();
-            static::$query[$class] = $self;
+            self::$query[$class] = $self;
         }
 
-        return static::$query[$class];
+        return self::$query[$class];
     }
 
     /**
@@ -99,16 +99,16 @@ class Model extends Query
         $name = basename($name);
 
         // 当前表名
-        static::$m_table = lcfirst($name);
+        self::$m_table = lcfirst($name);
         $_pattern        = '/([A-Z]+)/';
-        if (preg_match($_pattern, static::$m_table)) {
-            static::$m_table = preg_replace($_pattern, "_$1", static::$m_table);
-            static::$m_table = strtolower(static::$m_table);
+        if (preg_match($_pattern, self::$m_table)) {
+            self::$m_table = preg_replace($_pattern, "_$1", self::$m_table);
+            self::$m_table = strtolower(self::$m_table);
         }
 
-        static::$m_table = '`' . static::$m_table . '`';
+        self::$m_table = '`' . self::$m_table . '`';
 
-        return static::$m_table;
+        return self::$m_table;
     }
 
     /**
@@ -174,7 +174,7 @@ class Model extends Query
      */
     public static function find(array $data = [], $filed = NULL, $cache = FALSE)
     {
-        return static::getQuery()->row($data, $filed, $cache);
+        return self::getQuery()->row($data, $filed, $cache);
     }
 
     /**
@@ -186,7 +186,7 @@ class Model extends Query
      */
     public static function all(array $data = [], $filed = NULL, $cache = FALSE)
     {
-        return static::getQuery()->select($data, $filed, $cache);
+        return self::getQuery()->select($data, $filed, $cache);
     }
 
     /**
@@ -196,7 +196,7 @@ class Model extends Query
      */
     public static function create(array $data)
     {
-        return static::getQuery()->insert($data);
+        return self::getQuery()->insert($data);
     }
 
     /**
@@ -206,7 +206,7 @@ class Model extends Query
      */
     public static function createMore(array $data)
     {
-        return static::getQuery()->insertMore($data);
+        return self::getQuery()->insertMore($data);
     }
 
     /**
@@ -216,7 +216,7 @@ class Model extends Query
      */
     public static function destroy(array $data)
     {
-        return static::getQuery()->delete($data);
+        return self::getQuery()->delete($data);
     }
 
     /**
@@ -227,6 +227,6 @@ class Model extends Query
      */
     public static function save(array $data, $where)
     {
-        return static::getQuery()->update($data, $where);
+        return self::getQuery()->update($data, $where);
     }
 }
