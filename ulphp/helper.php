@@ -340,7 +340,12 @@ function isGet()
  */
 function load_view($file)
 {
-    include APP_PATH . 'view/' . $file . '.php';
+    $name = APP_PATH . 'view/' . $file;
+    if (is_file($filename = $name . '.php')) {
+        include $filename;
+    } else {
+        include $name . '.html';
+    }
 }
 
 /**
