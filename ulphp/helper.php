@@ -287,7 +287,8 @@ function url($controller = NULL, $params = [])
 
         $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $param;
     } else {
-        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $controller . '.html' . (count($params) ? '?' . http_build_query($params) : '');
+        $c   = new \ulphp\core\Controller();
+        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $c->ucFormat($controller) . '.html' . (count($params) ? '?' . http_build_query($params) : '');
     }
 
     $url = str_replace('/index.php?s=', '', $url);
