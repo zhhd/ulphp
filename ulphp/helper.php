@@ -288,7 +288,7 @@ function url($controller = NULL, $params = [])
         $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $param;
     } else {
         $controller = lcfirst($controller);
-        $_pattern   = '/([A-Z]+)\/$/';
+        $_pattern   = '/([A-Z]+)\//';
         if (preg_match($_pattern, $controller)) {
             $controller = preg_replace($_pattern, "_$1", $controller);
             $controller = strtolower($controller);
