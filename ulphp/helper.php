@@ -285,7 +285,7 @@ function url($controller = NULL, $params = [])
             $param = '';
         }
 
-        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $param;
+        $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $param;
     } else {
         $controller = lcfirst($controller);
         $_pattern   = '/([A-Z]+\w+\/)/';
@@ -294,7 +294,7 @@ function url($controller = NULL, $params = [])
                 return '_' . strtolower($matches[0]);
             }, $controller);
         }
-        $url = is_ssl() ? 'https://' : 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $controller . '.html' . (count($params) ? '?' . http_build_query($params) : '');
+        $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $controller . '.html' . (count($params) ? '?' . http_build_query($params) : '');
     }
 
     $url = str_replace('/index.php?s=', '', $url);
