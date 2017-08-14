@@ -372,3 +372,16 @@ function cache_file()
 {
     return \ulphp\manage\CacheManage::getCacheFile();
 }
+
+/**
+ * 封装退出
+ * @param string $result 记录日志
+ */
+function __exit($result = '')
+{
+    // 执行后置函数，可在自定义函数定义该函数
+    if (function_exists('postposition')) {
+        postposition($result);
+    }
+    ob_end_flush();
+}

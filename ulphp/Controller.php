@@ -35,7 +35,6 @@ class Controller
      */
     protected function fetch($view = NULL)
     {
-        ob_start();
         if (empty($view)) {
             $view = strtolower(CoreController::$controller . '/' . CoreController::$method);
         }
@@ -65,7 +64,6 @@ class Controller
         } else {
             throw new \Exception("视图不存在：" . $view);
         }
-        ob_end_flush();
     }
 
     /**

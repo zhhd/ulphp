@@ -18,6 +18,7 @@ class Controller
 
     public function load()
     {
+        ob_start();
         try {
             $s = ltrim(get('s'), '/');
             $s = explode('/', $s);
@@ -58,6 +59,7 @@ class Controller
         if (function_exists('postposition')) {
             postposition($result);
         }
+        ob_end_flush();
     }
 
     public function ucFormat($controller)
