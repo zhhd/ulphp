@@ -384,4 +384,5 @@ function __exit($result = '')
         postposition($result);
     }
     ob_end_flush();
+    exit();
 }
