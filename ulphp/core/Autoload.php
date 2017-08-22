@@ -28,7 +28,7 @@ class Autoload
         if (file_exists($file)) {
             require $file;
         } else {
-            throw new \Exception("$file not found.");
+            throw new \Exception("$file not found. url->" . url());
         }
     }
 }
