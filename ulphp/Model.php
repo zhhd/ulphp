@@ -47,8 +47,8 @@ class Model extends Query
     {
         $class = get_called_class();
         if (!isset(self::$query[$class])) {
-            $self                  = new static();
-            $self->table           = static::getMTable();
+            $self                = new static();
+            $self->table         = static::getMTable();
             self::$query[$class] = $self;
         }
 
@@ -100,7 +100,7 @@ class Model extends Query
 
         // 当前表名
         self::$m_table = lcfirst($name);
-        $_pattern        = '/([A-Z]+)/';
+        $_pattern      = '/([A-Z]+)/';
         if (preg_match($_pattern, self::$m_table)) {
             self::$m_table = preg_replace($_pattern, "_$1", self::$m_table);
             self::$m_table = strtolower(self::$m_table);
@@ -159,6 +159,141 @@ class Model extends Query
             } else {
                 $result = parent::select($data, $filed);
                 cache_file()->set($key, json_encode($result), $cache);
+
+                return $result;
+            }
+        }
+    }
+
+    /**
+     * count
+     * @param string $filed
+     * @param array  $data
+     * @param bool   $cache
+     * @return bool|int|string
+     */
+    public function count($filed = '*', array $data = [], $cache = FALSE)
+    {
+        $key = json_encode($data) . json_encode($filed) . $this->table . 'count';
+
+        if ($cache === FALSE) {
+            cache_file()->clear($key);
+
+            return parent::count($filed, $data);
+        } else {
+            if (cache_file()->key_exists($key)) {
+                return cache_file()->get($key);
+            } else {
+                $result = parent::count($filed, $data);
+                cache_file()->set($key, $result, $cache);
+
+                return $result;
+            }
+        }
+    }
+
+    /**
+     * sum
+     * @param string $filed
+     * @param array  $data
+     * @param bool   $cache
+     * @return bool|int|string
+     */
+    public function sum($filed = 'id', array $data = [], $cache = FALSE)
+    {
+        $key = json_encode($data) . json_encode($filed) . $this->table . 'sum';
+
+        if ($cache === FALSE) {
+            cache_file()->clear($key);
+
+            return parent::sum($filed, $data);
+        } else {
+            if (cache_file()->key_exists($key)) {
+                return cache_file()->get($key);
+            } else {
+                $result = parent::sum($filed, $data);
+                cache_file()->set($key, $result, $cache);
+
+                return $result;
+            }
+        }
+    }
+
+    /**
+     * avg
+     * @param string $filed
+     * @param array  $data
+     * @param bool   $cache
+     * @return bool|int|string
+     */
+    public function avg($filed = 'id', array $data = [], $cache = FALSE)
+    {
+        $key = json_encode($data) . json_encode($filed) . $this->table . 'avg';
+
+        if ($cache === FALSE) {
+            cache_file()->clear($key);
+
+            return parent::avg($filed, $data);
+        } else {
+            if (cache_file()->key_exists($key)) {
+                return cache_file()->get($key);
+            } else {
+                $result = parent::avg($filed, $data);
+                cache_file()->set($key, $result, $cache);
+
+                return $result;
+            }
+        }
+    }
+
+    /**
+     * min
+     * @param string $filed
+     * @param array  $data
+     * @param bool   $cache
+     * @return int|mixed
+     */
+    public function min($filed = 'id', array $data = [], $cache = FALSE)
+    {
+        $key = json_encode($data) . json_encode($filed) . $this->table . 'min';
+
+        if ($cache === FALSE) {
+            cache_file()->clear($key);
+
+            return parent::min($filed, $data);
+        } else {
+            if (cache_file()->key_exists($key)) {
+                return cache_file()->get($key);
+            } else {
+                $result = parent::min($filed, $data);
+                cache_file()->set($key, $result, $cache);
+
+                return $result;
+            }
+        }
+    }
+
+    /**
+     * max
+     * @param string $filed
+     * @param array  $data
+     * @param bool   $cache
+     * @return int|mixed
+     */
+    public function max($filed = 'id', array $data = [], $cache = FALSE)
+    {
+        $key = json_encode($data) . json_encode($filed) . $this->table . 'max';
+
+        if ($cache === FALSE) {
+            cache_file()->clear($key);
+
+            return parent::max($filed, $data);
+        } else {
+            if (cache_file()->key_exists($key)) {
+                return cache_file()->get($key);
+            } else {
+                $result = parent::max($filed, $data);
+                cache_file()->set($key, $result, $cache);
 
                 return $result;
             }
