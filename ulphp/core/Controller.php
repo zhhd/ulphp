@@ -28,6 +28,10 @@ class Controller
             $controller = is_null(($controller = array_shift($s))) ? $this->ucFormat($this->default_controller) : $this->ucFormat($controller);
             $method     = is_null(($method = array_shift($s))) ? $this->default_method : $method;
 
+            while (count($s)) {
+                $_GET[array_shift($s)] = count($s) ? array_shift($s) : '';
+            }
+
             static::$controller = $controller;
             static::$method     = $method;
 
