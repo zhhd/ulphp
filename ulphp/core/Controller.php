@@ -20,22 +20,23 @@ class Controller
     {
         ob_start();
         try {
-            $s = ltrim(get('s'), '/');
-            $s = explode('/', $s);
-            $s = array_filter($s);
-            $s = str_replace('.html', '', $s);
+            unset($_GET['s']);
 
-            $controller = is_null(($controller = array_shift($s))) ? $this->ucFormat($this->default_controller) : $this->ucFormat($controller);
-            $method     = is_null(($method = array_shift($s))) ? $this->default_method : $method;
+            $param    = str_replace($this->projectName(), '', $_SERVER['REQUEST_URI']);
+            $_pattern = '/\?[\s\S]+/';
+            $param    = preg_replace($_pattern, '', $param);
+            $params   = explode('/', $param);
+            $params   = str_replace('.html', '', $params);
 
-            while (count($s)) {
-                $_GET[array_shift($s)] = count($s) ? array_shift($s) : '';
+            $controller = empty(($controller = array_shift($params))) ? $this->ucFormat($this->default_controller) : $this->ucFormat($controller);
+            $method     = empty(($method = array_shift($params))) ? $this->default_method : $method;
+
+            while (count($params)) {
+                $_GET[array_shift($params)] = count($params) ? urldecode(array_shift($params)) : '';
             }
 
             static::$controller = $controller;
             static::$method     = $method;
-
-            unset($_GET['s']);
 
             $class = '\controller\\' . $controller;
             $obj   = new $class();
@@ -53,7 +54,8 @@ class Controller
                 echo json($result);
             }
 
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             log_file()->set($e->getMessage());
             $result = json(['status' => FALSE, 'msg' => '服务器繁忙，请稍后重试~ NO:500']);
             echo $result;
@@ -64,6 +66,12 @@ class Controller
             postposition($result);
         }
         ob_end_flush();
+    }
+
+    public function projectName()
+    {
+        $name = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
+        return $name;
     }
 
     public function ucFormat($controller)

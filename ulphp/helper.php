@@ -266,42 +266,75 @@ function json($value)
     return json_encode($value, JSON_UNESCAPED_UNICODE);
 }
 
+
 /**
  * 获取地址，不填为当前地址
- * @param null|string $controller
- * @param array       $params
+ * @param null|string|bool $controller 控制器/函数名
+ *                                     为空时返回当前链接并携带当前参数
+ *                                     为false时仅返回当前链接
+ * @param array            $params     参数
+ * @param int              $paramMode  参数模式 0在已有参数上拼接，1覆盖已有参数
  * @return string
  */
-function url($controller = NULL, $params = [])
+function url($controller = NULL, $params = [], $paramMode = 0)
 {
-    if (empty($controller)) {
-        if (!empty($_SERVER['QUERY_STRING']) && count($params)) {
-            $param = '?' . $_SERVER['QUERY_STRING'] . '&' . http_build_query($params);
-        } else if (count($params)) {
-            $param = '?' . http_build_query($params);
-        } else if (!empty($_SERVER['QUERY_STRING'])) {
-            $param = '?' . $_SERVER['QUERY_STRING'];
-        } else {
-            $param = '';
-        }
+    $ssl     = is_ssl() ? 'https://' : 'http://';
+    $baseUrl = $ssl . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '/', $_SERVER['PHP_SELF']);
 
-        $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $param;
-    } else {
-        $controller = lcfirst($controller);
-        $_pattern   = '/([A-Z]+\w+\/)/';
-        if (preg_match($_pattern, $controller)) {
-            $controller = preg_replace_callback($_pattern, function ($matches) {
-                return '_' . strtolower($matches[0]);
-            }, $controller);
+    // 仅返回当前链接
+    if ($controller === FALSE) {
+        $controller = \ulphp\core\Controller::$controller;
+        $method     = \ulphp\core\Controller::$method;
+        $controller = controller_to_link($controller);
+
+        $url = $baseUrl . $controller . '/' . $method . '.html';
+    } // 当前链接并携带当前参数
+    elseif (empty($controller)) {
+        $controller = \ulphp\core\Controller::$controller;
+        $method     = \ulphp\core\Controller::$method;
+        $controller = controller_to_link($controller);
+        if (!$paramMode) {
+            foreach (get() as $key => $value) {
+                if (!isset($params[$key])) {
+                    $params[$key] = $value;
+                }
+            }
         }
-        $url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . $controller . '.html' . (count($params) ? '?' . http_build_query($params) : '');
+        $paramsStr = '';
+        foreach ($params as $key => $value) {
+            $paramsStr = $key . '/' . urlencode($value) . ($paramsStr != '' ? '&' : '');
+        }
+        $url = $baseUrl . $controller . '/' . $method . ($paramsStr == '' ? '.html' : '/' . $paramsStr . '.html');
+    } // 返回指定控制器链接
+    else {
+        $controllers = explode('/', $controller);
+        $controller  = $controllers[0];
+        $method      = $controllers[1];
+        $controller  = controller_to_link($controller);
+        $paramsStr   = '';
+        foreach ($params as $key => $value) {
+            $paramsStr = $key . '/' . urlencode($value) . ($paramsStr != '' ? '&' : '');
+        }
+        $url = $baseUrl . $controller . '/' . $method . ($paramsStr == '' ? '.html' : '/' . $paramsStr . '.html');
     }
 
-    $url = str_replace('/index.php?s=', '', $url);
-    $url = str_replace('/index.php', '/', $url);
-    $url = preg_replace('/&/', '?', $url, 1);
-
     return $url;
+}
+
+/**
+ * 控制器名转换成url可识别链接
+ * @param $controller
+ * @return mixed|string
+ */
+function controller_to_link($controller)
+{
+    $controller = lcfirst($controller);
+    $_pattern   = '/([A-Z]+)/';
+    if (preg_match($_pattern, $controller)) {
+        $controller = preg_replace($_pattern, "_$1", $controller);
+        $controller = strtolower($controller);
+    }
+    return $controller;
 }
 
 /**
