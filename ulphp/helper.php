@@ -302,7 +302,8 @@ function url($controller = NULL, $params = [], $paramMode = 0)
         }
         $paramsStr = '';
         foreach ($params as $key => $value) {
-            $paramsStr = $key . '/' . urlencode($value) . ($paramsStr != '' ? '&' : '');
+            $paramsStr .= ($paramsStr != '' ? '/' : '');
+            $paramsStr .= $key . '/' . urlencode($value);
         }
         $url = $baseUrl . $controller . '/' . $method . ($paramsStr == '' ? '.html' : '/' . $paramsStr . '.html');
     } // 返回指定控制器链接
@@ -313,7 +314,7 @@ function url($controller = NULL, $params = [], $paramMode = 0)
         $controller  = controller_to_link($controller);
         $paramsStr   = '';
         foreach ($params as $key => $value) {
-            $paramsStr = $key . '/' . urlencode($value) . ($paramsStr != '' ? '&' : '');
+            $paramsStr = $key . '/' . urlencode($value) . ($paramsStr != '' ? '/' : '');
         }
         $url = $baseUrl . $controller . '/' . $method . ($paramsStr == '' ? '.html' : '/' . $paramsStr . '.html');
     }
