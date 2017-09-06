@@ -93,7 +93,12 @@ class CacheFile implements CacheInterface
     public function set($key, $value, $expire = 0)
     {
         $filename = $this->path . md5($key);
-        file_put_contents($filename, "$expire\r\n" . $value);
+        $fp       = fopen($filename, 'w');
+        if (flock($fp, LOCK_EX)) {
+            fwrite($fp, "$expire\r\n" . $value);
+            flock($fp, LOCK_UN);
+        }
+        fclose($fp);
     }
 
     /**
@@ -129,6 +134,11 @@ class CacheFile implements CacheInterface
      */
     private function unlink($path)
     {
-        return is_file($path) && unlink($path);
+        try {
+            return is_file($path) && unlink($path);
+        }
+        catch (\Exception $e) {
+            return TRUE;
+        }
     }
 }
