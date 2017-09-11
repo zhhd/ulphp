@@ -124,7 +124,32 @@ class CacheFile implements CacheInterface
                 $this->unlink($dir . md5($key));
             }
         }
+    }
 
+    /**
+     * 清理过期缓存
+     */
+    public function clearExpire()
+    {
+        $dir = $this->path;
+
+        if ($dh = opendir($dir)) {
+            while (($filename = readdir($dh)) !== FALSE) {
+                $filename = $dir . $filename;
+                if (is_file($filename)) {
+                    $file   = fopen($filename, 'r');
+                    $expire = fgets($file);
+                    if (0 != $expire && $_SERVER['REQUEST_TIME'] > filemtime($filename) + $expire) {
+                        fclose($file);
+                        $this->unlink($filename);
+                    } else {
+                        fclose($file);
+
+                    }
+                }
+            }
+            closedir($dh);
+        }
     }
 
     /**
