@@ -98,3 +98,6 @@ service crond restart 重启服务
 service crond stop 停止服务
 </code>
 </pre>
+> 如：0 0 * * * /usr/bin/curl http://localhost/cache_file/clear.html >> /var/www/html/log.txt
+
+> 定时在晚上0点
