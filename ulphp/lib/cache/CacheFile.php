@@ -128,11 +128,12 @@ class CacheFile implements CacheInterface
 
     /**
      * 清理过期缓存
+     * @return int
      */
     public function clearExpire()
     {
-        $dir = $this->path;
-
+        $dir   = $this->path;
+        $count = 0;
         if ($dh = opendir($dir)) {
             while (($filename = readdir($dh)) !== FALSE) {
                 $filename = $dir . $filename;
@@ -142,6 +143,7 @@ class CacheFile implements CacheInterface
                     if (0 != $expire && $_SERVER['REQUEST_TIME'] > filemtime($filename) + $expire) {
                         fclose($file);
                         $this->unlink($filename);
+                        $count++;
                     } else {
                         fclose($file);
 
@@ -150,6 +152,7 @@ class CacheFile implements CacheInterface
             }
             closedir($dh);
         }
+        return $count;
     }
 
     /**
