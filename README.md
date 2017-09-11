@@ -100,4 +100,4 @@ service crond stop 停止服务
 </pre>
 > 如：0 0 * * * /usr/bin/curl http://localhost/cache_file/clear.html >> /var/www/html/log.txt
 
-> 定时在晚上0点
+> 定时在每天晚上0点，并将网址内容输出到 /var/www/html/log.txt中
