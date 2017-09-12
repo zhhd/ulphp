@@ -367,9 +367,9 @@ class Query
                 $on    = $value['on'];
 
                 if (strpos($table, 'as') || strpos($table, ' ')) {
-                    $join .= " join $table on $on ";
+                    $join .= " left join $table on $on ";
                 } else {
-                    $join .= " join `$table` on $on ";
+                    $join .= " left join `$table` on $on ";
                 }
             }
         }
@@ -390,9 +390,9 @@ class Query
                 $on    = $value['on'];
 
                 if (strpos($table, 'as') || strpos($table, ' ')) {
-                    $join .= " join $table on $on ";
+                    $join .= " right join $table on $on ";
                 } else {
-                    $join .= " join `$table` on $on ";
+                    $join .= " right join `$table` on $on ";
                 }
             }
         }
