@@ -51,10 +51,10 @@ class DBManage
         $port     = $config['port'];
         $timeout  = $config['timeout'];
 
-        if (!isset(static::$redis[$host . $host])) {
-            static::$redis[$host . $host] = new qRedis($host, $password, $port, $timeout);
+        if (!isset(static::$redis[$host])) {
+            static::$redis[$host] = new qRedis($host, $password, $port, $timeout);
         }
 
-        return static::$redis[$host . $host];
+        return static::$redis[$host];
     }
 }
