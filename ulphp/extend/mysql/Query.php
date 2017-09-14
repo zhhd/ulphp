@@ -265,16 +265,16 @@ class Query
          * 条件拼接
          */
         if (!empty(trim($where))) {
-            $whereStr = empty($whereStr) ? $where : " and {$where}";
+            $whereStr .= empty($whereStr) ? $where : " and {$where}";
         }
         if (!empty(trim($whereOr))) {
-            $whereStr = empty($whereStr) ? $whereOr : " or {$whereOr}";
+            $whereStr .= empty($whereStr) ? $whereOr : " or {$whereOr}";
         }
         if (!empty(trim($in))) {
-            $whereStr = empty($whereStr) ? $in : " and {$in}";
+            $whereStr .= empty($whereStr) ? $in : " and {$in}";
         }
         if (!empty(trim($inOr))) {
-            $whereStr = empty($whereStr) ? $inOr : " or {$inOr}";
+            $whereStr .= empty($whereStr) ? $inOr : " or {$inOr}";
         }
         if (empty($whereStr)) {
             $param = NULL;
