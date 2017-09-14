@@ -72,6 +72,18 @@ class Query
     protected $where_or = [];
 
     /**
+     * in and
+     * @var array
+     */
+    protected $in = [];
+
+    /**
+     * in or
+     * @var array
+     */
+    protected $in_or = [];
+
+    /**
      * join
      * @var array
      */
@@ -159,93 +171,118 @@ class Query
      */
     private function getWhere($data)
     {
-        $where   = [];
-        $whereOr = [];
-        $param   = [];
+        $i        = 0;
+        $where    = [];
+        $whereOr  = [];
+        $in       = [];
+        $inOr     = [];
+        $param    = [];
+        $whereStr = '';
 
-        $i = 0;
-        if (count($data)) {
-            foreach ($data as $key => $value) {
-                $i++;
-                $_filed = str_replace('.', '_', $key) . $i;
-                if (strpos($key, '.')) {
-                    $where [] = " $key=:w_$_filed ";
-                } else {
-                    $where [] = " `$key`=:w_$_filed ";
-                }
-
-                $param[":w_$_filed"] = $value;
+        /**
+         * add where
+         */
+        foreach ($data as $key => $value) {
+            $i++;
+            $_filed = str_replace('.', '_', $key) . $i;
+            if (strpos($key, '.')) {
+                $where [] = " $key=:w_$_filed ";
+            } else {
+                $where [] = " `$key`=:w_$_filed ";
             }
+
+            $param[":w_$_filed"] = $value;
         }
 
         /**
          * and 条件
          */
-        if (count($this->where)) {
-            foreach ($this->where as $value) {
-                $filed     = $value[0];
-                $condition = $value[1];
-                $op        = $value[2];
-                $i++;
-                $_filed = str_replace('.', '_', $filed) . $i;
-                if (strpos($filed, '.')) {
-                    $where [] = " $filed $op :w_$_filed ";
-                } else {
-                    $where [] = " `$filed` $op :w_$_filed ";
-                }
-                $param[":w_$_filed"] = $condition;
+        foreach ($this->where as $value) {
+            $filed     = $value[0];
+            $condition = $value[1];
+            $op        = $value[2];
+            $i++;
+            $_filed = str_replace('.', '_', $filed) . $i;
+            if (strpos($filed, '.')) {
+                $where [] = " $filed $op :w_$_filed ";
+            } else {
+                $where [] = " `$filed` $op :w_$_filed ";
             }
+            $param[":w_$_filed"] = $condition;
         }
-        if (count($where)) {
-            $where = implode(' and ', $where);
-        } else {
-            $where = '';
-        }
+        $where = count($where) ? implode(' and ', $where) : '';
 
         /**
          * or 条件
          */
-        if (count($this->where_or)) {
-            foreach ($this->where_or as $value) {
-                $filed     = $value[0];
-                $condition = $value[1];
-                $op        = $value[2];
+        foreach ($this->where_or as $value) {
+            $filed     = $value[0];
+            $condition = $value[1];
+            $op        = $value[2];
 
-                $i++;
-                $_filed = str_replace('.', '_', $filed) . $i;
-                if (strpos($filed, '.')) {
-                    $whereOr [] = " $filed $op :w_$_filed ";
-                } else {
-                    $whereOr [] = " `$filed` $op :w_$_filed ";
-                }
-                $param[":w_$_filed"] = $condition;
+            $i++;
+            $_filed = str_replace('.', '_', $filed) . $i;
+            if (strpos($filed, '.')) {
+                $whereOr [] = " $filed $op :w_$_filed ";
+            } else {
+                $whereOr [] = " `$filed` $op :w_$_filed ";
             }
+            $param[":w_$_filed"] = $condition;
         }
-        if (count($whereOr)) {
-            $whereOr = implode(' or ', $whereOr);
-        } else {
-            $whereOr = '';
-        }
+        $whereOr = count($whereOr) ? implode(' or ', $whereOr) : '';
 
+        // in
+        foreach ($this->in as $value) {
+            $filed     = $value[0];
+            $condition = $value[1];
+            $i++;
+            $_filed = str_replace('.', '_', $filed) . $i;
+            if (strpos($filed, '.')) {
+                $in [] = " FIND_IN_SET($filed,:w_$_filed) ";
+            } else {
+                $in [] = " FIND_IN_SET(`$filed`,:w_$_filed) ";
+            }
+            $param[":w_$_filed"] = $condition;
+        }
+        $in = count($in) ? implode(' and ', $in) : '';
+
+        // in or
+        foreach ($this->in_or as $value) {
+            $filed     = $value[0];
+            $condition = $value[1];
+            $i++;
+            $_filed = str_replace('.', '_', $filed) . $i;
+            if (strpos($filed, '.')) {
+                $inOr [] = " FIND_IN_SET($filed,:w_$_filed) ";
+            } else {
+                $inOr [] = " FIND_IN_SET(`$filed`,:w_$_filed) ";
+            }
+            $param[":w_$_filed"] = $condition;
+        }
+        $inOr = count($inOr) ? implode(' or ', $inOr) : '';
 
         /**
-         * 两条件拼接
+         * 条件拼接
          */
-        if (empty(trim($where))) {
-            $where = $whereOr;
-        } else if (!empty(trim($whereOr))) {
-            $where = $where . ' or ' . $whereOr;
+        if (!empty(trim($where))) {
+            $whereStr = empty($whereStr) ? $where : " and {$where}";
         }
-
-
-        if (empty(trim($where))) {
+        if (!empty(trim($whereOr))) {
+            $whereStr = empty($whereStr) ? $whereOr : " or {$whereOr}";
+        }
+        if (!empty(trim($in))) {
+            $whereStr = empty($whereStr) ? $in : " and {$in}";
+        }
+        if (!empty(trim($inOr))) {
+            $whereStr = empty($whereStr) ? $inOr : " or {$inOr}";
+        }
+        if (empty($whereStr)) {
             $param = NULL;
         } else {
-            $where = " where $where";
+            $whereStr = " where $whereStr";
         }
 
-
-        return [$where, $param];
+        return [$whereStr, $param];
     }
 
     /**
@@ -407,6 +444,32 @@ class Query
     public function getDb()
     {
         return mysql_db($this->config);
+    }
+
+    /**
+     * in and
+     * @param $field
+     * @param $condition
+     * @return $this
+     */
+    public function in($field, $condition)
+    {
+        $this->in[] = [$field, $condition];
+
+        return $this;
+    }
+
+    /**
+     * in or
+     * @param $field
+     * @param $condition
+     * @return $this
+     */
+    public function inOr($field, $condition)
+    {
+        $this->in_or[] = [$field, $condition];
+
+        return $this;
     }
 
     /**
@@ -1027,11 +1090,7 @@ class Query
      */
     public function opValues($filed, $value, $op)
     {
-        return [
-            'filed' => $filed,
-            'value' => $value,
-            'op'    => $op,
-        ];
+        return ['filed' => $filed, 'value' => $value, 'op' => $op,];
     }
 
     /**
