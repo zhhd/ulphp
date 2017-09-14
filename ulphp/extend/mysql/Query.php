@@ -240,16 +240,16 @@ class Query
             $_filed = str_replace('.', '_', $filed) . $i;
             if (strpos($filed, '.')) {
                 foreach ($condition as $key => $val) {
-                    $files[]                      = ":w_{$_filed}_{$key}";
-                    $param[":w_{$_filed}_{$key}"] = $val;
+                    $files[]                      = ":i_{$_filed}_{$key}";
+                    $param[":i_{$_filed}_{$key}"] = $val;
                 }
-                $in [] = ' FIND_IN_SET(' . $filed . ',' . implode(',', $files) . ') ';
+                $in [] = $filed . ' in (' . implode(',', $files) . ') ';
             } else {
                 foreach ($condition as $key => $val) {
-                    $files[]                      = ":w_{$_filed}_{$key}";
-                    $param[":w_{$_filed}_{$key}"] = $val;
+                    $files[]                      = ":i_{$_filed}_{$key}";
+                    $param[":i_{$_filed}_{$key}"] = $val;
                 }
-                $in [] = ' FIND_IN_SET(`' . $filed . '``,' . implode(',', $files) . ') ';
+                $in [] = ' `' . $filed . '` in (' . implode(',', $files) . ') ';
             }
         }
         $in = count($in) ? implode(' and ', $in) : '';
@@ -258,14 +258,22 @@ class Query
         foreach ($this->in_or as $value) {
             $filed     = $value[0];
             $condition = $value[1];
+            $files     = [];
             $i++;
             $_filed = str_replace('.', '_', $filed) . $i;
             if (strpos($filed, '.')) {
-                $inOr [] = " FIND_IN_SET($filed,:w_$_filed) ";
+                foreach ($condition as $key => $val) {
+                    $files[]                       = ":io_{$_filed}_{$key}";
+                    $param[":io_{$_filed}_{$key}"] = $val;
+                }
+                $in [] = $filed . ' in (' . implode(',', $files) . ') ';
             } else {
-                $inOr [] = " FIND_IN_SET(`$filed`,:w_$_filed) ";
+                foreach ($condition as $key => $val) {
+                    $files[]                       = ":io_{$_filed}_{$key}";
+                    $param[":io_{$_filed}_{$key}"] = $val;
+                }
+                $in [] = ' `' . $filed . '` in (' . implode(',', $files) . ') ';
             }
-            $param[":w_$_filed"] = $condition;
         }
         $inOr = count($inOr) ? implode(' or ', $inOr) : '';
 
