@@ -235,14 +235,22 @@ class Query
         foreach ($this->in as $value) {
             $filed     = $value[0];
             $condition = $value[1];
+            $files     = [];
             $i++;
             $_filed = str_replace('.', '_', $filed) . $i;
             if (strpos($filed, '.')) {
-                $in [] = " FIND_IN_SET($filed,:w_$_filed) ";
+                foreach ($condition as $key => $val) {
+                    $files[]                      = ":w_{$_filed}_{$key}";
+                    $param[":w_{$_filed}_{$key}"] = $val;
+                }
+                $in [] = ' FIND_IN_SET(' . $filed . ',' . implode(',', $files) . ') ';
             } else {
-                $in [] = " FIND_IN_SET(`$filed`,:w_$_filed) ";
+                foreach ($condition as $key => $val) {
+                    $files[]                      = ":w_{$_filed}_{$key}";
+                    $param[":w_{$_filed}_{$key}"] = $val;
+                }
+                $in [] = ' FIND_IN_SET(`' . $filed . '``,' . implode(',', $files) . ') ';
             }
-            $param[":w_$_filed"] = $condition;
         }
         $in = count($in) ? implode(' and ', $in) : '';
 
@@ -448,11 +456,11 @@ class Query
 
     /**
      * in and
-     * @param $field
-     * @param $condition
+     * @param string $field
+     * @param array  $condition
      * @return $this
      */
-    public function in($field, $condition)
+    public function in($field, array $condition)
     {
         $this->in[] = [$field, $condition];
 
@@ -461,11 +469,11 @@ class Query
 
     /**
      * in or
-     * @param $field
-     * @param $condition
+     * @param string $field
+     * @param array  $condition
      * @return $this
      */
-    public function inOr($field, $condition)
+    public function inOr($field, array $condition)
     {
         $this->in_or[] = [$field, $condition];
 
