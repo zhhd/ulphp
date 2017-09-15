@@ -97,25 +97,3 @@ www  WEB部署目录（或者子目录）
 ### 数据表和字段
 *   数据表和字段采用小写加下划线方式命名，并注意字段名不要以下划线开头，例如 `user` 表和 `user_name`字段，不建议使用驼峰和中文作为数据表字段命名。
 
-## 文件缓存原理
-
-### 缓存格式
-
-> 过期时间\r\n缓存数据
-
-> 为了防止额外的负担，文件缓存未采用自动清理过期缓存的机制，但有清理过期缓存的函数。开发者
-可使用linux自带定时命令对缓存文件进行定时清理。
-
-<pre>
-<code>
-定时命令
-crontab -l  显示所有任务
-crontab -e 编辑任务
-service crond start 开启服务
-service crond restart 重启服务
-service crond stop 停止服务
-</code>
-</pre>
-> 如：0 0 * * * /usr/bin/curl http://localhost/cache_file/clear.html >> /var/www/html/log.txt
-
-> 定时在每天晚上0点，并将网址内容输出到 /var/www/html/log.txt中
