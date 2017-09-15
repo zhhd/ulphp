@@ -9,11 +9,14 @@
 /**
  * 全局过滤函数
  * @param string $str
- * @param array  $filterFun 过滤函数
+ * @param array  $filterFun 过滤函数,为null则使用全局过滤函数
  * @return mixed
  */
 function filter($str, $filterFun)
 {
+    if (is_null($filterFun)) {
+        $filterFun = isset(config('config')['submitFilter']) ? config('config')['submitFilter'] : [];
+    }
     foreach ($filterFun as $fun) {
         $str = call_user_func($fun, $str);
     }
@@ -24,17 +27,17 @@ function filter($str, $filterFun)
 /**
  * post获取
  * @param string|null $key       键
- * @param array       $filterFun 过滤函数
+ * @param array       $filterFun 过滤函数,为null则使用全局过滤函数
  * @return null|string|array
  */
-function post($key = NULL, $filterFun = [])
+function post($key = null, $filterFun = null)
 {
-    if ($key == NULL) {
+    if ($key == null) {
         return $_POST;
-    } else if (isset($_POST[$key])) {
+    } elseif (isset($_POST[$key])) {
         return filter($_POST[$key], $filterFun);
     } else {
-        return NULL;
+        return null;
     }
 }
 
@@ -42,27 +45,27 @@ function post($key = NULL, $filterFun = [])
 /**
  * get获取
  * @param string|null $key       键
- * @param array       $filterFun 过滤函数
+ * @param array       $filterFun 过滤函数,为null则使用全局过滤函数
  * @return null|string|array
  */
-function get($key = NULL, $filterFun = [])
+function get($key = null, $filterFun = null)
 {
-    if ($key == NULL) {
+    if ($key == null) {
         return $_GET;
-    } else if (isset($_GET[$key])) {
+    } elseif (isset($_GET[$key])) {
         return filter($_GET[$key], $filterFun);
     } else {
-        return NULL;
+        return null;
     }
 }
 
 /**
  * post get 获取
- * @param       $key
- * @param array $filterFun 过滤函数
+ * @param string $key       键
+ * @param array  $filterFun 过滤函数,为null则使用全局过滤函数
  * @return null|string|array
  */
-function input($key, $filterFun = [])
+function input($key, $filterFun = null)
 {
     if (is_null($value = post($key, $filterFun))) {
         return get($key, $filterFun);
@@ -81,21 +84,21 @@ if (!function_exists('session')) {
      * @param null $value
      * @return array|null|string
      */
-    function session($key = NULL, $value = NULL)
+    function session($key = null, $value = null)
     {
         if (!isset($_SESSION)) {
             session_start();
         }
 
-        if ($key == NULL) {
+        if ($key == null) {
             return $_SESSION;
-        } else if ($value == NULL && isset($_SESSION[$key])) {
+        } elseif ($value == null && isset($_SESSION[$key])) {
             return $_SESSION[$key];
-        } else if ($key != NULL && $value != NULL) {
+        } elseif ($key != null && $value != null) {
             $_SESSION[$key] = $value;
         }
 
-        return NULL;
+        return null;
     }
 }
 
@@ -152,9 +155,9 @@ function now($format = 'Y-m-d H:i:s')
  * @return mixed
  * @throws Exception
  */
-function http($url, $params = [], $method = 'GET', $header = [], $multi = FALSE)
+function http($url, $params = [], $method = 'GET', $header = [], $multi = false)
 {
-    $opts = [CURLOPT_TIMEOUT => 30, CURLOPT_RETURNTRANSFER => 1, CURLOPT_SSL_VERIFYPEER => FALSE, CURLOPT_SSL_VERIFYHOST => FALSE, CURLOPT_HTTPHEADER => $header,];
+    $opts = [CURLOPT_TIMEOUT => 30, CURLOPT_RETURNTRANSFER => 1, CURLOPT_SSL_VERIFYPEER => false, CURLOPT_SSL_VERIFYHOST => false, CURLOPT_HTTPHEADER => $header,];
 
     switch (strtoupper($method)) {
         case 'GET':
@@ -207,16 +210,16 @@ function redirect($url, $code = 302)
 function is_ssl()
 {
     if (isset($_SERVER['HTTPS']) && ('1' == $_SERVER['HTTPS'] || 'on' == strtolower($_SERVER['HTTPS']))) {
-        return TRUE;
+        return true;
     } elseif (isset($_SERVER['REQUEST_SCHEME']) && 'https' == $_SERVER['REQUEST_SCHEME']) {
-        return TRUE;
+        return true;
     } elseif (isset($_SERVER['SERVER_PORT']) && ('443' == $_SERVER['SERVER_PORT'])) {
-        return TRUE;
+        return true;
     } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && 'https' == $_SERVER['HTTP_X_FORWARDED_PROTO']) {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 /**
@@ -225,11 +228,11 @@ function is_ssl()
  * @param boolean $adv  是否进行高级模式获取（有可能被伪装）
  * @return mixed
  */
-function ip($type = 0, $adv = FALSE)
+function ip($type = 0, $adv = false)
 {
     $type = $type ? 1 : 0;
-    static $ip = NULL;
-    if (NULL !== $ip) {
+    static $ip = null;
+    if (null !== $ip) {
         return $ip[$type];
     }
 
@@ -237,7 +240,7 @@ function ip($type = 0, $adv = FALSE)
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
             $pos = array_search('unknown', $arr);
-            if (FALSE !== $pos) {
+            if (false !== $pos) {
                 unset($arr[$pos]);
             }
             $ip = trim(current($arr));
@@ -276,13 +279,13 @@ function json($value)
  * @param int              $paramMode  参数模式 0在已有参数上拼接，1覆盖已有参数
  * @return string
  */
-function url($controller = NULL, $params = [], $paramMode = 0)
+function url($controller = null, $params = [], $paramMode = 0)
 {
     $ssl     = is_ssl() ? 'https://' : 'http://';
     $baseUrl = $ssl . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '/', $_SERVER['PHP_SELF']);
 
     // 仅返回当前链接
-    if ($controller === FALSE) {
+    if ($controller === false) {
         $controller = \ulphp\core\Controller::$controller;
         $method     = \ulphp\core\Controller::$method;
         $controller = controller_to_link($controller);
@@ -369,9 +372,9 @@ function redis_db($file = 'redis')
 function isGet()
 {
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        return TRUE;
+        return true;
     } else {
-        return FALSE;
+        return false;
     }
 }
 
