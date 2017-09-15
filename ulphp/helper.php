@@ -412,6 +412,7 @@ function cache_file()
 
 /**
  * 封装退出
+ * 后置函数postposition存在则会调用并传入$result值，可在common/common.php中对其进行声明
  * @param string $result 记录日志
  */
 function __exit($result = '')
