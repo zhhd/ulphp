@@ -35,7 +35,7 @@ location /project/ {
 </code>
 </pre>
 
-## apache
+## apache部署
 ##### 新建文件`.htaccess`。复制一下数据，放在项目根目录,
 <pre>
 <code>
