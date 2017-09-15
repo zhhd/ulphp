@@ -8,8 +8,8 @@
 
 /**
  * 全局过滤函数
- * @param string $str
- * @param array  $filterFun 过滤函数,为null则使用全局过滤函数
+ * @param string     $str
+ * @param array|null $filterFun 过滤函数,为null则使用全局过滤函数
  * @return mixed
  */
 function filter($str, $filterFun)
@@ -27,7 +27,7 @@ function filter($str, $filterFun)
 /**
  * post获取
  * @param string|null $key       键
- * @param array       $filterFun 过滤函数,为null则使用全局过滤函数
+ * @param array|null  $filterFun 过滤函数,为null则使用全局过滤函数
  * @return null|string|array
  */
 function post($key = null, $filterFun = null)
@@ -45,7 +45,7 @@ function post($key = null, $filterFun = null)
 /**
  * get获取
  * @param string|null $key       键
- * @param array       $filterFun 过滤函数,为null则使用全局过滤函数
+ * @param array|null  $filterFun 过滤函数,为null则使用全局过滤函数
  * @return null|string|array
  */
 function get($key = null, $filterFun = null)
@@ -61,8 +61,8 @@ function get($key = null, $filterFun = null)
 
 /**
  * post get 获取
- * @param string $key       键
- * @param array  $filterFun 过滤函数,为null则使用全局过滤函数
+ * @param string     $key       键
+ * @param array|null $filterFun 过滤函数,为null则使用全局过滤函数
  * @return null|string|array
  */
 function input($key, $filterFun = null)
