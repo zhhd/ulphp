@@ -15,7 +15,7 @@
 function filter($str, $filterFun)
 {
     if (is_null($filterFun)) {
-        $filterFun = isset(config('config')['submitFilter']) ? config('config')['submitFilter'] : [];
+        $filterFun = isset(config('config')['submit_filter']) ? config('config')['submit_filter'] : [];
     }
     foreach ($filterFun as $fun) {
         $str = call_user_func($fun, $str);

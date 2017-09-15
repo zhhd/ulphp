@@ -8,5 +8,5 @@
  */
 return [
     // 全局提交过滤函数，如：
-    'submitFilter' => ['htmlspecialchars', 'addslashes'],
+    'submit_filter' => ['htmlspecialchars', 'addslashes'],
 ];

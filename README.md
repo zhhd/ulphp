@@ -1,17 +1,20 @@
 # ulphp
 > 框架初衷，因为其他框架太过于笨重，附加的内容比较多。
+
 > 为了适应秒杀系统专门参考tp文档开发的简易框架。
+
 > 仅作为学习使用，请勿用于商业项目中。
 
 > 作者：zhd(410919571@qq.com)
 
-### 版本V1.0.6 
+### 版本v2.0.0 
 
 > `注：自定义全局函数命名请勿和框架自带全局函数命名冲突`
 
 > 除session函数外，为了框架性能所以只对session函数进行命名重复检测
 
 > 在开发中我们经常会对系统进行高并发测试，为了避免产生大量session文件造成服务器iops过高影响测试结果，
+
 > 所以开发者可以在 common\common.php文件中对session函数进行重构，以适应测试环境。
 
 ##PHP版本要求
@@ -29,6 +32,21 @@ location /project/ {
         rewrite  ^/project/(.*)$  /project/index.php?s=/$1  last;
     }
 }
+</code>
+</pre>
+
+## apache
+##### 新建文件`.htaccess`。复制一下数据，放在项目根目录,
+<pre>
+<code>
+<IfModule mod_rewrite.c>
+Options +FollowSymlinks -Multiviews
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?/$1 [QSA,PT,L]
+</IfModule>
 </code>
 </pre>
 
@@ -67,14 +85,14 @@ www  WEB部署目录（或者子目录）
 
 ### 函数和类、属性命名
 *   类的命名采用驼峰法，并且首字母大写，例如 `User`、`UserType`，默认不需要添加后缀，例如`UserController`应该直接命名为`User`；
-*   函数的命名使用小写字母和下划线（小写字母开头）的方式，例如 `get_client_ip`；
+*   函数的命名使用小写字母和下划线（小写字母开头）的方式，例如 `mysql_db`；
 *   方法的命名使用驼峰法，并且首字母小写，例如 `getUserName`；
 *   属性的命名使用小写字母和下划线（小写字母开头）的方式，例如 `id`、`user_name`；
 *   以双下划线“__”打头的函数或方法作为魔法方法，例如 `__call` 和 `__autoload`；
 
 ### 常量和配置
 *   常量以大写字母和下划线命名，例如 `APP_PATH`；
-*   配置参数以小写字母和下划线命名，例如 `url_route_on` 和`url_convert`；
+*   配置参数以小写字母和下划线命名，例如 `submit_filter`；
 
 ### 数据表和字段
 *   数据表和字段采用小写加下划线方式命名，并注意字段名不要以下划线开头，例如 `user` 表和 `user_name`字段，不建议使用驼峰和中文作为数据表字段命名。

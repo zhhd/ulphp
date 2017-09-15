@@ -19,7 +19,12 @@ ini_set('date.timezone', 'PRC');
 /**
  * 当前框架版本
  */
-define('VERSION', '1.0.6');
+define('VERSION', 'v2.0.0');
+
+/**
+ * 最低php版本
+ */
+define('MIN_PHP_VERSION','php5.6');
 
 /**
  * 常量设置
