@@ -115,15 +115,13 @@ class Controller
         return null;
     }
 
-    public
-    function projectName()
+    public function projectName()
     {
         $name = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
         return $name;
     }
 
-    public
-    function ucFormat($controller)
+    public function ucFormat($controller)
     {
         $strs       = explode('_', $controller);
         $controller = '';
