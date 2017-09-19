@@ -26,9 +26,11 @@ class Parser
      */
     public function parse()
     {
-        preg_match('#^/\*\*(.*)\*/#s', $this->string, $comment);
+        if (!preg_match('#^/\*\*(.*)\*/#s', $this->string, $comment))
+            return [];
         $comment = trim($comment[1]);
-        preg_match_all('#^\s*\*(.*)#m', $comment, $lines);
+        if (preg_match_all('#^\s*\*(.*)#m', $comment, $lines))
+            return [];
         $lines = $lines[1];
 
         $parserValues = [];
