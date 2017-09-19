@@ -10,7 +10,6 @@ namespace ulphp\core;
 
 
 use ulphp\extend\doc\Parser;
-use ulphp\extend\doc\ParserValue;
 
 class Controller
 {
@@ -49,13 +48,17 @@ class Controller
             $parameter        = [];
             foreach ($reflectionMethod->getParameters() as $item) {
                 if (!is_null(input($item->name))) {
-                    $parameter[] = input($item->name);
+                    $parameter[$item->name] = input($item->name);
+                } elseif ($item->isDefaultValueAvailable()) {
+                    $parameter[$item->name] = $item->getDefaultValue();
+                } else {
+                    $parameter[$item->name] = '';
                 }
             }
 
             $config = config('config');
             if (isset($config['annotate']) && $config['annotate']) {
-                $result = $this->docComment($reflectionMethod);
+                $result = $this->docComment($reflectionMethod, $parameter);
                 if ($result == null) {
                     $result = call_user_func_array([$obj, $method], $parameter);
                 }
@@ -88,13 +91,9 @@ class Controller
      * @param $reflectionMethod \ReflectionMethod
      * @return string
      */
-    public function docComment($reflectionMethod)
+    public function docComment($reflectionMethod, $parameter)
     {
         $docComment = $reflectionMethod->getDocComment();
-        $parameter  = [];
-        foreach ($reflectionMethod->getParameters() as $item) {
-            $parameter[$item->name] = input($item->name);
-        }
 
         $parser       = new Parser($docComment);
         $parserValues = $parser->parse();
