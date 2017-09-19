@@ -10,5 +10,5 @@ return [
     // 全局提交过滤函数，如：
     'submit_filter' => ['htmlspecialchars', 'addslashes', 'trim'],
     // 注解
-    'annotate'      => true,
+    'annotate'      => false,
 ];
