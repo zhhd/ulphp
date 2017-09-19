@@ -9,6 +9,9 @@
 namespace ulphp\core;
 
 
+use ulphp\extend\doc\Parser;
+use ulphp\extend\doc\ParserValue;
+
 class Controller
 {
     private       $default_controller = 'index';
@@ -41,23 +44,35 @@ class Controller
             $class = '\controller\\' . $controller;
             $obj   = new $class();
 
-            $refClass  = new \ReflectionClass($class);
-            $parameter = [];
-            foreach ($refClass->getMethod($method)->getParameters() as $item) {
-                $parameter[] = input($item->name);
+            $refClass         = new \ReflectionClass($class);
+            $reflectionMethod = $refClass->getMethod($method);
+            $parameter        = [];
+            foreach ($reflectionMethod->getParameters() as $item) {
+                if (!is_null(input($item->name))) {
+                    $parameter[] = input($item->name);
+                }
             }
 
-            $result = call_user_func_array([$obj, $method], $parameter);
+            $config = config('config');
+            if (isset($config['annotate']) && $config['annotate']) {
+                $result = $this->docComment($reflectionMethod);
+                if ($result == null) {
+                    $result = call_user_func_array([$obj, $method], $parameter);
+                }
+            } else {
+                $result = call_user_func_array([$obj, $method], $parameter);
+            }
+
             if (is_int($result) || is_string($result)) {
                 echo $result;
-            } else if (!is_null($result)) {
+            } elseif (!is_null($result)) {
                 echo json($result);
             }
 
         }
         catch (\Exception $e) {
             log_file()->set($e->getMessage());
-            $result = json(['status' => FALSE, 'msg' => '服务器繁忙，请稍后重试~ NO:500']);
+            $result = json(['status' => false, 'msg' => '服务器繁忙，请稍后重试~ NO:500']);
             echo $result;
         }
 
@@ -68,13 +83,48 @@ class Controller
         ob_end_flush();
     }
 
-    public function projectName()
+    /**
+     * 注解解析
+     * @param $reflectionMethod \ReflectionMethod
+     * @return string
+     */
+    public function docComment($reflectionMethod)
+    {
+        $docComment = $reflectionMethod->getDocComment();
+        $parameter  = [];
+        foreach ($reflectionMethod->getParameters() as $item) {
+            $parameter[$item->name] = input($item->name);
+        }
+
+        $parser       = new Parser($docComment);
+        $parserValues = $parser->parse();
+        foreach ($parserValues as $parserValue) {
+            $paramValue = isset($parameter[$parserValue->name]) ? $parameter[$parserValue->name] : '';
+            $types      = $parserValue->types;
+            $desc       = $parserValue->desc;
+
+            if ($paramValue == '' && !in_array('null', $types)) {
+                return validate('null', $desc);
+            } else {
+                if (in_array('int', $types)) {
+                    if (!is_numeric($paramValue)) {
+                        return validate('int', $desc);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public
+    function projectName()
     {
         $name = str_replace('index.php', '', $_SERVER['SCRIPT_NAME']);
         return $name;
     }
 
-    public function ucFormat($controller)
+    public
+    function ucFormat($controller)
     {
         $strs       = explode('_', $controller);
         $controller = '';

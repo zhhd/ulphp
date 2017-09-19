@@ -424,3 +424,26 @@ function __exit($result = '')
     ob_end_flush();
     exit();
 }
+
+
+if (!function_exists('validate')) {
+    /**
+     * 验证器，使用注解验证时统一进入的函数
+     * @param string $type 数据类型，被验证值的数据类型
+     *                     null
+     *                     int
+     * @param string $desc 注释
+     * @return string
+     */
+    function validate($type, $desc)
+    {
+        switch ($type) {
+            case 'null':
+                return json(['state' => false, 'msg' => $desc . '不能为空']);
+                break;
+            case 'int':
+                return json(['state' => false, 'msg' => $desc . '必须为数字']);
+                break;
+        }
+    }
+}
