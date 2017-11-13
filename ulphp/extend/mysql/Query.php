@@ -121,26 +121,13 @@ class Query
     private function filedSplit($array)
     {
         $filed = '';
-        $keys  = ['.', ' count', ' sum', ' as ', ' avg', ' min', ' max', ' '];
         foreach ($array as $value) {
             if ($filed != '') {
                 $filed .= ',';
             }
 
-            $filed_key = FALSE;
             $value     = strtolower($value);
-            foreach ($keys as $k) {
-                if (strpos($value, $k)) {
-                    $filed_key = TRUE;
-                    break;
-                }
-            }
-
-            if ($filed_key) {
-                $filed .= $value;
-            } else {
-                $filed .= "`$value`";
-            }
+            $filed     .= $value;
         }
 
         return $filed;
@@ -151,13 +138,13 @@ class Query
      * @param null|array $filed
      * @return null|string
      */
-    private function getFiled($filed = NULL)
+    private function getFiled($filed = null)
     {
         if (is_array($filed)) {
             $filed = $this->filedSplit($filed);
-        } else if (empty($filed) && count($this->filed)) {
+        } elseif (empty($filed) && count($this->filed)) {
             $filed = $this->filedSplit($this->filed);
-        } else if (empty($filed)) {
+        } elseif (empty($filed)) {
             $filed = ' * ';
         }
 
@@ -293,7 +280,7 @@ class Query
             $whereStr .= empty($whereStr) ? $inOr : " or {$inOr}";
         }
         if (empty($whereStr)) {
-            $param = NULL;
+            $param = null;
         } else {
             $whereStr = " where $whereStr";
         }
@@ -361,7 +348,7 @@ class Query
             $having = ' having ' . $having;
         } else {
             $having = '';
-            $param  = NULL;
+            $param  = null;
         }
 
         return [$having, $param];
@@ -659,7 +646,7 @@ class Query
      * @param string $filed 列
      * @return array|bool 没有数据返回false
      */
-    public function row(array $data = [], $filed = NULL)
+    public function row(array $data = [], $filed = null)
     {
         /**
          * 列
@@ -723,7 +710,7 @@ class Query
      * @param null|array $filed 列
      * @return array|bool 没有数据返回false
      */
-    public function select(array $data = [], $filed = NULL)
+    public function select(array $data = [], $filed = null)
     {
         /**
          * 列
