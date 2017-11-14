@@ -157,7 +157,15 @@ function now($format = 'Y-m-d H:i:s')
  */
 function http($url, $params = [], $method = 'GET', $header = [], $multi = false)
 {
-    $opts = [CURLOPT_TIMEOUT => 30, CURLOPT_RETURNTRANSFER => 1, CURLOPT_SSL_VERIFYPEER => false, CURLOPT_SSL_VERIFYHOST => false, CURLOPT_HTTPHEADER => $header,];
+    $opts = [
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_HTTPHEADER     => $header,
+    ];
+    if (strpos($url, 'https://') !== false) {
+        $opts[CURLOPT_SSL_VERIFYPEER] = false;
+        $opts[CURLOPT_SSL_VERIFYHOST] = false;
+    }
 
     switch (strtoupper($method)) {
         case 'GET':
