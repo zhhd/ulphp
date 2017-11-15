@@ -147,18 +147,19 @@ function now($format = 'Y-m-d H:i:s')
 
 /**
  * http 请求
- * @param string $url    网址
- * @param array  $params 参数
- * @param string $method 提交方式
- * @param array  $header 头部
- * @param bool   $multi  是否传输文件
+ * @param string $url     网址
+ * @param array  $params  参数
+ * @param string $method  提交方式
+ * @param array  $header  头部
+ * @param bool   $multi   是否传输文件
+ * @param int    $timeout 超时时间s
  * @return mixed
  * @throws Exception
  */
-function http($url, $params = [], $method = 'GET', $header = [], $multi = false)
+function http($url, $params = [], $method = 'GET', $header = [], $multi = false, $timeout = 30)
 {
     $opts = [
-        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_TIMEOUT        => $timeout,
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_HTTPHEADER     => $header,
     ];
